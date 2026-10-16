@@ -1,0 +1,8 @@
+{
+  "score_threshold_strong": 70.0,
+  "score_threshold_moderate": 40.0,
+  "theme": "dark",
+  "max_upload_size_mb": 5,
+  "max_batch_size": 20,
+  "demo_mode_active": true
+}

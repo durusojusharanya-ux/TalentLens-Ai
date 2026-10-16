@@ -1,0 +1,107 @@
+[
+  {
+    "id": "demo-55616ffc",
+    "name": "Aria Vance",
+    "email": "aria.vance@example.edu",
+    "phone": "+1 (555) 234-5678",
+    "estimated_experience": "1+ years",
+    "job_id": "job-sample-aiml-001",
+    "job_title": "AI/ML Engineer Intern",
+    "similarity_score": 22.3,
+    "required_skills_matched": [
+      "Python",
+      "Machine Learning",
+      "scikit-learn",
+      "PyTorch",
+      "Pandas",
+      "NumPy",
+      "Git",
+      "REST APIs"
+    ],
+    "required_skills_missing": [],
+    "preferred_skills_matched": [
+      "Docker",
+      "Deep Learning",
+      "Natural Language Processing"
+    ],
+    "required_skill_coverage": 100.0,
+    "explanation": "Relevant text was detected for core required skills: Python, Machine Learning, scikit-learn, PyTorch, and 4 others. Preferred skill coverage includes: Docker, Deep Learning, Natural Language Processing. The document exhibits lower overall vocabulary and phrase overlap with the target role description.",
+    "warnings": [],
+    "extracted_text": "Aria Vance\naria.vance@example.edu | +1 (555) 234-5678 | San Francisco, CA\n\nSUMMARY\nPassionate Artificial Intelligence student with 1+ years of experience training and evaluating machine learning models. \nProven expertise in Python, PyTorch, scikit-learn, Pandas, and NumPy for NLP and predictive modeling.\n\nEDUCATION\nB.S. in Computer Science (AI Track), Expected May 2026\n\nTECHNICAL SKILLS\nLanguages: Python, C++, SQL\nML Frameworks: PyTorch, scikit-learn, TensorFlow, Hugging Face\nLibraries: Pandas, NumPy, Matplotlib, SciPy\nTools & Concepts: Git, Docker, REST APIs, Deep Learning, Natural Language Processing, Machine Learning\n\nPROJECTS & EXPERIENCE\nAI Research Assistant (2025 - Present)\n- Trained transformer-based NLP classification models with PyTorch and Hugging Face, achieving 91% F1-score.\n- Conducted exploratory data analysis and feature engineering on tabular datasets using Pandas, NumPy, and scikit-learn.\n- Built automated evaluation pipelines and integrated model inference endpoints using REST APIs and Git for versioning.\n- Experimented with deep learning architectures and hyperparameter tuning.",
+    "original_filename": "aria_vance_synthetic_demo_resume.pdf",
+    "stored_filename": "demo_demo-55616ffc.pdf",
+    "shortlist_status": true,
+    "is_demo": true,
+    "created_at": "2026-10-16T06:41:34.897981Z",
+    "updated_at": "2026-10-16T06:41:34.897981Z"
+  },
+  {
+    "id": "demo-b06a0f44",
+    "name": "Liam Chen",
+    "email": "liam.chen@devmail.org",
+    "phone": "+1 (555) 876-5432",
+    "estimated_experience": "2+ years",
+    "job_id": "job-sample-aiml-001",
+    "job_title": "AI/ML Engineer Intern",
+    "similarity_score": 9.7,
+    "required_skills_matched": [
+      "Python",
+      "Machine Learning",
+      "Pandas",
+      "Git",
+      "REST APIs"
+    ],
+    "required_skills_missing": [
+      "scikit-learn",
+      "PyTorch",
+      "NumPy"
+    ],
+    "preferred_skills_matched": [
+      "FastAPI",
+      "Docker"
+    ],
+    "required_skill_coverage": 62.5,
+    "explanation": "Relevant text was detected for core required skills: Python, Machine Learning, Pandas, Git, and 1 others. Preferred skill coverage includes: FastAPI, Docker. Missing required skills: scikit-learn, PyTorch, NumPy. The document exhibits lower overall vocabulary and phrase overlap with the target role description.",
+    "warnings": [],
+    "extracted_text": "Liam Chen\nliam.chen@devmail.org | +1 (555) 876-5432 | Seattle, WA\n\nPROFESSIONAL SUMMARY\nFull-Stack Software Engineer with 2+ years of experience developing responsive web applications and backend microservices.\nProficient in TypeScript, React, Python, FastAPI, Node.js, and Docker containerization.\n\nEDUCATION\nB.S. in Software Engineering, Graduated 2025\n\nTECHNICAL EXPERTISE\nFrontend: React, TypeScript, JavaScript, HTML5, CSS3, Tailwind CSS\nBackend: Python, FastAPI, Node.js, Express, REST APIs\nDatabase & DevOps: PostgreSQL, SQL, Docker, Git, CI/CD, Linux\nML Familiarity: Basic Python data analysis with Pandas, introductory Machine Learning concepts\n\nEXPERIENCE\nJunior Full-Stack Developer | CloudTech Solutions (2024 - 2026)\n- Designed and maintained REST APIs using Python FastAPI and PostgreSQL.\n- Implemented responsive frontend dashboards using React and TypeScript.\n- Containerized microservices using Docker and automated deployments via Git CI/CD pipelines.\n- Integrated third-party analytics APIs and optimized database queries.",
+    "original_filename": "liam_chen_synthetic_demo_resume.pdf",
+    "stored_filename": "demo_demo-b06a0f44.pdf",
+    "shortlist_status": true,
+    "is_demo": true,
+    "created_at": "2026-10-16T06:41:34.904474Z",
+    "updated_at": "2026-10-16T06:45:37.593376Z"
+  },
+  {
+    "id": "demo-c1ef6e14",
+    "name": "Sophia Patel",
+    "email": "sophia.patel@datahub.net",
+    "phone": "+1 (555) 345-6789",
+    "estimated_experience": "1.5+ years",
+    "job_id": "job-sample-aiml-001",
+    "job_title": "AI/ML Engineer Intern",
+    "similarity_score": 9.2,
+    "required_skills_matched": [
+      "Python",
+      "Pandas",
+      "NumPy",
+      "Git"
+    ],
+    "required_skills_missing": [
+      "Machine Learning",
+      "scikit-learn",
+      "PyTorch",
+      "REST APIs"
+    ],
+    "preferred_skills_matched": [],
+    "required_skill_coverage": 50.0,
+    "explanation": "Relevant text was detected for core required skills: Python, Pandas, NumPy, Git. Missing required skills: Machine Learning, scikit-learn, PyTorch, and 1 other required qualifications. The document exhibits lower overall vocabulary and phrase overlap with the target role description.",
+    "warnings": [],
+    "extracted_text": "Sophia Patel\nsophia.patel@datahub.net | +1 (555) 345-6789 | Chicago, IL\n\nOBJECTIVE\nAnalytical and detail-oriented Data Analyst with 1.5+ years of experience transforming raw enterprise datasets into actionable insights.\nStrong command of SQL, Python, Pandas, NumPy, and Tableau dashboards.\n\nEDUCATION\nB.S. in Statistics & Data Analytics, 2025\n\nCORE COMPETENCIES\nAnalysis & BI: Data Analysis, Exploratory Data Analysis, Tableau, Power BI, Excel\nProgramming: Python, SQL, R\nData Processing: Pandas, NumPy, Data Cleaning, Data Visualization\nCollaboration: Git, Agile, Business Communication\n\nEXPERIENCE\nData Analyst Intern | Horizon Analytics (2024 - 2025)\n- Wrote complex SQL queries across relational databases to extract business KPI metrics.\n- Utilized Python, Pandas, and NumPy for automated data cleansing and statistical analysis.\n- Created interactive BI dashboards in Tableau for executive stakeholders.\n- Collaborated using Git version control and presented weekly insights to management.",
+    "original_filename": "sophia_patel_synthetic_demo_resume.pdf",
+    "stored_filename": "demo_demo-c1ef6e14.pdf",
+    "shortlist_status": false,
+    "is_demo": true,
+    "created_at": "2026-10-16T06:41:34.911394Z",
+    "updated_at": "2026-10-16T06:41:34.911394Z"
+  }
+]
