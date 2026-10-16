@@ -138,6 +138,44 @@ def extract_candidate_experience(text: str) -> str:
     return "Not detected"
 
 
+def extract_candidate_education(text: str) -> str:
+    """
+    Detect explicit mention of education degrees or major from resume text.
+    Returns 'Not detected in extracted text' if no formal degree term is present.
+    """
+    if not text:
+        return "Not detected in extracted text"
+
+    # First check lines following an 'EDUCATION' header
+    lines = [line.strip() for line in text.split("\n") if line.strip()]
+    in_edu = False
+    for line in lines:
+        if re.match(r'^(?:education|academic background|qualifications)\b', line, re.IGNORECASE):
+            in_edu = True
+            continue
+        if in_edu:
+            if re.match(r'^(?:skills|projects|experience|work|certifications|summary|technical)\b', line, re.IGNORECASE):
+                break
+            if len(line) >= 4 and not re.match(r'^[•\-\*]', line):
+                clean_line = re.sub(r'^[•\-\*\>\s]+', '', line).strip()
+                if len(clean_line) >= 5:
+                    return clean_line[:90]
+
+    # Regex search for degrees
+    edu_regex = re.compile(
+        r'\b(?:B\.?Tech|B\.?S\.?|B\.?E\.?|BCA|M\.?Tech|M\.?S\.?|MCA|Ph\.?D|Bachelor(?:\s+of\s+[A-Za-z]+)?|Master(?:\s+of\s+[A-Za-z]+)?|Diploma)\b[^\n,;]*',
+        re.IGNORECASE
+    )
+    match = edu_regex.search(text)
+    if match:
+        snippet = match.group(0).strip()
+        if len(snippet) > 80:
+            snippet = snippet[:77] + "..."
+        return snippet
+
+    return "Not detected in extracted text"
+
+
 def parse_resume(pdf_bytes: bytes) -> Dict[str, Any]:
     """
     High-level resume parser.
@@ -149,6 +187,7 @@ def parse_resume(pdf_bytes: bytes) -> Dict[str, Any]:
             "email": "Not detected",
             "phone": "Not detected",
             "estimated_experience": "Not detected",
+            "estimated_education": "Not detected in extracted text",
             "extracted_text": "",
             "warnings": warnings,
             "success": False
@@ -158,6 +197,7 @@ def parse_resume(pdf_bytes: bytes) -> Dict[str, Any]:
     email = extract_candidate_email(text)
     phone = extract_candidate_phone(text)
     exp = extract_candidate_experience(text)
+    edu = extract_candidate_education(text)
 
     if name == "Not detected":
         warnings.append("Candidate name could not be automatically determined.")
@@ -169,6 +209,7 @@ def parse_resume(pdf_bytes: bytes) -> Dict[str, Any]:
         "email": email,
         "phone": phone,
         "estimated_experience": exp,
+        "estimated_education": edu,
         "extracted_text": text,
         "warnings": warnings,
         "success": True

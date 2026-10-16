@@ -1,13 +1,21 @@
 import re
-from typing import List, Dict, Any, Tuple
+from typing import List, Dict, Any, Tuple, Optional
 import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
 
 DISCLAIMER_NOTICE = (
-    "Scores are decision-support signals based on text similarity and skill matching. "
+    "Scores are decision-support signals based on technical text similarity and skill matching. "
     "They are not hiring probabilities and should not be used as the sole basis for employment decisions."
+)
+
+METHODOLOGY_EXPLANATION = (
+    "TalentLens AI computes TF-IDF numerical vectorization (unigrams and bigrams) between the target role description "
+    "and candidate resumes, calculating empirical cosine similarity. Required and preferred skills are evaluated using "
+    "boundary-safe phrase matching with canonical alias normalization. A 'Not detected' result indicates the exact terminology "
+    "was not found in the selectable resume text, which may occur due to alternative phrasing, unextracted portfolio links, "
+    "or unlisted experience."
 )
 
 # Standard skill alias map for intelligent entity resolution
@@ -53,7 +61,6 @@ def normalize_text(text: str) -> str:
     if not text:
         return ""
 
-    # Replace newlines and tabs with spaces
     cleaned = text.lower()
     # Protect special tokens like c++, c#, .net
     cleaned = re.sub(r'\bc\+\+\b', ' cpp_token ', cleaned)
@@ -62,7 +69,6 @@ def normalize_text(text: str) -> str:
 
     # Normalize excessive punctuation, keep letters, numbers, hyphens, and protected tokens
     cleaned = re.sub(r'[^\w\s\-\_]', ' ', cleaned)
-    # Collapse multiple whitespaces
     cleaned = re.sub(r'\s+', ' ', cleaned).strip()
 
     # Restore protected tokens
@@ -82,7 +88,6 @@ def match_single_skill(skill_query: str, text: str) -> bool:
     if not skill_clean or not text:
         return False
 
-    # Check alias dictionary
     aliases = [skill_clean]
     for canonical, alias_list in SKILL_ALIASES.items():
         if skill_clean == canonical or skill_clean in alias_list:
@@ -92,7 +97,6 @@ def match_single_skill(skill_query: str, text: str) -> bool:
     lowered_text = f" {text.lower()} "
 
     for alias in aliases:
-        # Special cases with symbols: c++, c#, .net
         if alias == "c++":
             if " c++ " in lowered_text or " cpp " in lowered_text:
                 return True
@@ -106,19 +110,56 @@ def match_single_skill(skill_query: str, text: str) -> bool:
                 return True
             continue
         if alias == "c":
-            # Match isolated single letter 'c'
             if re.search(r'(?:^|[\s,;./\(\)\[\]])c(?:$|[\s,;./\(\)\[\]])', text, re.IGNORECASE):
-                # Ensure it's not followed by ++ or #
                 if not re.search(r'\bc\+\+', text, re.IGNORECASE) and not re.search(r'\bc\#', text, re.IGNORECASE):
                     return True
             continue
 
-        # General boundary safe matching
         pattern = r'\b' + re.escape(alias) + r'\b'
         if re.search(pattern, text, re.IGNORECASE):
             return True
 
     return False
+
+
+def extract_skill_evidence(skill_query: str, raw_text: str) -> str:
+    """
+    Extract authentic evidence snippet directly from actual extracted resume text.
+    Never invents or hallucinates text.
+    """
+    if not raw_text or not skill_query:
+        return "Not detected in extracted resume text."
+
+    # Split resume into lines and sentences
+    lines = [line.strip() for line in raw_text.split("\n") if line.strip()]
+
+    # First check line-by-line for the best contextual sentence
+    best_snippet = None
+    for line in lines:
+        if match_single_skill(skill_query, line):
+            cleaned = re.sub(r'^[•\-\*\>\s]+', '', line).strip()
+            if len(cleaned) > 10:
+                best_snippet = cleaned
+                break
+
+    if not best_snippet:
+        # Check by sentence splitting if lines are long
+        sentences = re.split(r'(?<=[.!?])\s+', raw_text)
+        for sent in sentences:
+            if match_single_skill(skill_query, sent):
+                cleaned = re.sub(r'[\r\n\t]+', ' ', sent).strip()
+                cleaned = re.sub(r'^[•\-\*\>\s]+', '', cleaned).strip()
+                if len(cleaned) > 10:
+                    best_snippet = cleaned
+                    break
+
+    if best_snippet:
+        # Limit snippet to ~160 chars cleanly
+        if len(best_snippet) > 160:
+            best_snippet = best_snippet[:157] + "..."
+        return best_snippet
+
+    return "Referenced in candidate profile text."
 
 
 def analyze_skills(
@@ -127,11 +168,12 @@ def analyze_skills(
     preferred_skills: List[str]
 ) -> Dict[str, Any]:
     """
-    Step 4: Required-skill and preferred-skill analysis.
+    Step 4: Required-skill and preferred-skill analysis with genuine evidence snippets.
     """
     matched_req = []
     missing_req = []
     matched_pref = []
+    evidence_snippets = {}
 
     for req in required_skills:
         req_clean = req.strip()
@@ -139,8 +181,10 @@ def analyze_skills(
             continue
         if match_single_skill(req_clean, resume_text):
             matched_req.append(req_clean)
+            evidence_snippets[req_clean] = extract_skill_evidence(req_clean, resume_text)
         else:
             missing_req.append(req_clean)
+            evidence_snippets[req_clean] = "Not detected in extracted text (the resume does not explicitly list this term; may exist in unlisted projects or external portfolio)."
 
     for pref in preferred_skills:
         pref_clean = pref.strip()
@@ -148,6 +192,7 @@ def analyze_skills(
             continue
         if match_single_skill(pref_clean, resume_text):
             matched_pref.append(pref_clean)
+            evidence_snippets[pref_clean] = extract_skill_evidence(pref_clean, resume_text)
 
     total_req = len(matched_req) + len(missing_req)
     coverage = round((len(matched_req) / total_req * 100.0), 1) if total_req > 0 else 100.0
@@ -156,7 +201,8 @@ def analyze_skills(
         "required_skills_matched": matched_req,
         "required_skills_missing": missing_req,
         "preferred_skills_matched": matched_pref,
-        "required_skill_coverage": coverage
+        "required_skill_coverage": coverage,
+        "evidence_snippets": evidence_snippets
     }
 
 
@@ -176,7 +222,6 @@ def compute_tf_idf_similarity(job_description: str, resume_text: str) -> Tuple[f
         return 0.0, ["Resume contains insufficient text for vectorization."]
 
     try:
-        # Sensible defaults: English stop words, unigrams and bigrams, custom token pattern
         vectorizer = TfidfVectorizer(
             stop_words='english',
             ngram_range=(1, 2),
@@ -187,7 +232,6 @@ def compute_tf_idf_similarity(job_description: str, resume_text: str) -> Tuple[f
         sim_matrix = cosine_similarity(tfidf_matrix[0:1], tfidf_matrix[1:2])
         raw_sim = float(sim_matrix[0][0])
 
-        # Convert to percentage and clamp to 0.0 - 100.0
         score = round(min(100.0, max(0.0, raw_sim * 100.0)), 1)
         return score, warnings
     except Exception as e:
@@ -221,7 +265,7 @@ def generate_explanation(
         missing_str = ", ".join(missing_req[:3])
         if len(missing_req) > 3:
             missing_str += f", and {len(missing_req) - 3} other required qualifications"
-        parts.append(f"Missing required skills: {missing_str}.")
+        parts.append(f"Not detected in resume text: {missing_str}.")
 
     if score >= 70.0:
         parts.append("The resume exhibits high textual alignment with the key responsibilities and domain terminology in the job description.")
@@ -258,7 +302,9 @@ def screen_candidate(
         "required_skills_missing": skill_results["required_skills_missing"],
         "preferred_skills_matched": skill_results["preferred_skills_matched"],
         "required_skill_coverage": skill_results["required_skill_coverage"],
+        "evidence_snippets": skill_results["evidence_snippets"],
         "explanation": explanation,
         "warnings": sim_warnings,
-        "notice": DISCLAIMER_NOTICE
+        "notice": DISCLAIMER_NOTICE,
+        "methodology": METHODOLOGY_EXPLANATION
     }

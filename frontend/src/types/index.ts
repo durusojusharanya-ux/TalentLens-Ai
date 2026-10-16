@@ -23,6 +23,19 @@ export interface JobCreatePayload {
   employment_type: string;
 }
 
+export type CandidateStage = 'New' | 'Reviewed' | 'Shortlisted' | 'Interview' | 'Selected' | 'Rejected';
+
+export interface InterviewNotes {
+  scheduled_date?: string;
+  status?: string; // 'Scheduled' | 'Completed' | 'Pending' | 'Cancelled'
+  interviewer?: string;
+  rating?: number; // 1-5
+  notes?: string;
+  feedback?: string;
+  next_steps?: string;
+  updated_at?: string;
+}
+
 export interface Candidate {
   id: string;
   rank?: number;
@@ -30,13 +43,18 @@ export interface Candidate {
   email: string;
   phone?: string;
   estimated_experience?: string;
+  estimated_education?: string;
+  stage?: CandidateStage;
+  interview_notes?: InterviewNotes;
   job_id: string;
   job_title: string;
+  session_id?: string;
   similarity_score: number;
   required_skills_matched: string[];
   required_skills_missing: string[];
   preferred_skills_matched: string[];
   required_skill_coverage: number;
+  evidence_snippets?: Record<string, string>;
   explanation: string;
   warnings: string[];
   extracted_text: string;
@@ -128,4 +146,64 @@ export interface AppSettingsData {
     local_access_caution: string;
     production_notice: string;
   };
+}
+
+export interface ScreeningSession {
+  id: string;
+  name: string;
+  job_id: string;
+  job_title: string;
+  job_snapshot: {
+    title?: string;
+    department?: string;
+    description?: string;
+    required_skills: string[];
+    preferred_skills: string[];
+  };
+  candidate_ids: string[];
+  candidate_count: number;
+  avg_score: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface AuditLog {
+  id: string;
+  event_type: string;
+  description: string;
+  timestamp: string;
+  candidate_id?: string;
+  candidate_name?: string;
+  job_id?: string;
+  job_title?: string;
+  session_id?: string;
+  details?: Record<string, any>;
+}
+
+export interface SkillMatrixCandidateEntry {
+  matched: boolean;
+  evidence: string;
+}
+
+export interface SkillMatrixItem {
+  skill: string;
+  is_required: boolean;
+  candidates: Record<string, SkillMatrixCandidateEntry>;
+}
+
+export interface CandidateCompareResult {
+  candidate_count: number;
+  candidates: Candidate[];
+  skill_matrix: SkillMatrixItem[];
+}
+
+export interface BackupSnapshot {
+  app: string;
+  version: string;
+  created_at: string;
+  jobs: Job[];
+  candidates: Candidate[];
+  sessions: ScreeningSession[];
+  audit_logs: AuditLog[];
+  settings: any;
 }

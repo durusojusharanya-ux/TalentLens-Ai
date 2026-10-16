@@ -3,6 +3,7 @@ import confetti from 'canvas-confetti';
 import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
 import { CandidateDetailModal } from './components/CandidateDetailModal';
+import { CandidateCompareModal } from './components/CandidateCompareModal';
 import { JobModal } from './components/JobModal';
 import { OverviewPage } from './pages/OverviewPage';
 import { AnalyzePage } from './pages/AnalyzePage';
@@ -12,7 +13,7 @@ import { AnalyticsPage } from './pages/AnalyticsPage';
 import { JobsPage } from './pages/JobsPage';
 import { SettingsPage } from './pages/SettingsPage';
 import { LandingPage } from './pages/LandingPage';
-import { Job, Candidate, DashboardStats } from './types';
+import { Job, Candidate, DashboardStats, ScreeningSession, CandidateCompareResult, CandidateStage, InterviewNotes } from './types';
 import { api } from './services/api';
 import { AlertCircle } from 'lucide-react';
 
@@ -20,11 +21,6 @@ export const App: React.FC = () => {
   // View mode: 'landing' (public marketing showcase) or 'app' (recruiter workspace)
   const [viewMode, setViewMode] = useState<'landing' | 'app'>(() => {
     return (localStorage.getItem('talentlens_view') as any) || 'app';
-  });
-
-  // Theme: 'ivory' | 'cobalt' | 'graphite'
-  const [theme, setThemeState] = useState<'ivory' | 'cobalt' | 'graphite'>(() => {
-    return (localStorage.getItem('talentlens_theme') as any) || 'ivory';
   });
 
   // Layout: 'command' | 'editorial' | 'spatial'
@@ -40,10 +36,13 @@ export const App: React.FC = () => {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [selectedJobId, setSelectedJobId] = useState<string>('');
   const [candidates, setCandidates] = useState<Candidate[]>([]);
+  const [sessions, setSessions] = useState<ScreeningSession[]>([]);
+  const [selectedSessionId, setSelectedSessionId] = useState<string>('all');
   const [stats, setStats] = useState<DashboardStats | null>(null);
 
   // Modals
   const [selectedCandidateId, setSelectedCandidateId] = useState<string | null>(null);
+  const [compareModalData, setCompareModalData] = useState<CandidateCompareResult | null>(null);
   const [jobModalOpen, setJobModalOpen] = useState<boolean>(false);
   const [jobToEdit, setJobToEdit] = useState<Job | null>(null);
 
@@ -52,13 +51,6 @@ export const App: React.FC = () => {
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const [globalError, setGlobalError] = useState<string | null>(null);
 
-  // Apply Theme & Layout to DOM and localStorage
-  const setTheme = (newTheme: 'ivory' | 'cobalt' | 'graphite') => {
-    setThemeState(newTheme);
-    localStorage.setItem('talentlens_theme', newTheme);
-    document.documentElement.setAttribute('data-theme', newTheme);
-  };
-
   const setLayout = (newLayout: 'command' | 'editorial' | 'spatial') => {
     setLayoutState(newLayout);
     localStorage.setItem('talentlens_layout', newLayout);
@@ -66,9 +58,31 @@ export const App: React.FC = () => {
   };
 
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-    document.documentElement.setAttribute('data-layout', layout);
-  }, [theme, layout]);
+    try {
+      localStorage.removeItem('talentlens_theme');
+      localStorage.removeItem('talentlens_custom_theme');
+    } catch {}
+
+    const root = document.documentElement;
+    root.removeAttribute('data-theme');
+    root.removeAttribute('data-theme-mode');
+
+    // Remove any previous custom CSS variable overrides
+    const overrideProps = [
+      '--primary', '--primary-hover', '--primary-light', '--primary-glow',
+      '--accent-secondary', '--accent-secondary-subtle', '--accent-sage',
+      '--btn-primary-bg', '--btn-primary-text', '--btn-primary-hover',
+      '--bg-app', '--bg-sidebar', '--bg-card', '--bg-card-subtle',
+      '--bg-card-hover', '--bg-input', '--bg-overlay',
+      '--text-main', '--text-bright', '--text-muted', '--text-dim',
+      '--border-subtle', '--border-strong', '--border-focus',
+      '--chart-primary', '--chart-secondary', '--chart-tertiary', '--chart-quaternary',
+      '--chart-grid', '--badge-strong-bg', '--badge-strong-text', '--badge-strong-border',
+      '--badge-mod-bg', '--badge-mod-text', '--badge-mod-border'
+    ];
+    overrideProps.forEach((p) => root.style.removeProperty(p));
+    root.setAttribute('data-layout', layout);
+  }, [layout]);
 
   useEffect(() => {
     localStorage.setItem('talentlens_view', viewMode);
@@ -85,7 +99,7 @@ export const App: React.FC = () => {
         setIsBackendHealthy(true);
       } catch {
         setIsBackendHealthy(false);
-        setGlobalError('Backend server is offline. Please start FastAPI on http://127.0.0.1:8000.');
+        setGlobalError('Backend server is offline. Please ensure local backend is running on http://127.0.0.1:8000.');
         setIsRefreshing(false);
         return;
       }
@@ -101,7 +115,15 @@ export const App: React.FC = () => {
       const candsData = await api.getCandidates();
       setCandidates(candsData);
 
-      // 4. Load Stats
+      // 4. Load Screening Sessions
+      try {
+        const sessData = await api.getSessions();
+        setSessions(sessData);
+      } catch {
+        // Non-blocking
+      }
+
+      // 5. Load Stats
       const statsData = await api.getStats();
       setStats(statsData);
     } catch (err: any) {
@@ -124,10 +146,10 @@ export const App: React.FC = () => {
       if (nextStatus) {
         // Trigger subtle confetti burst
         confetti({
-          particleCount: 40,
-          spread: 60,
+          particleCount: 45,
+          spread: 65,
           origin: { y: 0.8 },
-          colors: theme === 'ivory' ? ['#1B4332', '#C87D55', '#2D6A4F'] : theme === 'cobalt' ? ['#1D4ED8', '#FF5A1F', '#3B82F6'] : ['#14B8A6', '#A3E635', '#2DD4BF'],
+          colors: ['#2563EB', '#7C3AED', '#059669', '#F59E0B', '#DB2777', '#06B6D4'],
         });
       }
 
@@ -135,10 +157,133 @@ export const App: React.FC = () => {
         prev.map((c) => (c.id === id ? { ...c, shortlist_status: nextStatus } : c))
       );
 
+      // Update in comparison modal if open
+      if (compareModalData) {
+        setCompareModalData(prev => {
+          if (!prev) return null;
+          return {
+            ...prev,
+            candidates: prev.candidates.map(c => c.id === id ? { ...c, shortlist_status: nextStatus } : c)
+          };
+        });
+      }
+
       const updatedStats = await api.getStats();
       setStats(updatedStats);
     } catch (err: any) {
       alert(`Failed to update shortlist status: ${err.message}`);
+    }
+  };
+
+  // Bulk Shortlist
+  const handleBulkShortlist = async (candidateIds: string[], status: boolean) => {
+    try {
+      await api.bulkShortlist(candidateIds, status);
+
+      if (status) {
+        confetti({
+          particleCount: 50,
+          spread: 70,
+          origin: { y: 0.8 },
+          colors: ['#087EA4', '#075985', '#38BDF8', '#0284C7'],
+        });
+      }
+
+      setCandidates((prev) =>
+        prev.map((c) => (candidateIds.includes(c.id) ? { ...c, shortlist_status: status } : c))
+      );
+
+      const updatedStats = await api.getStats();
+      setStats(updatedStats);
+    } catch (err: any) {
+      alert(`Bulk action failed: ${err.message}`);
+    }
+  };
+
+  // Stage Management
+  const handleUpdateStage = async (id: string, stage: CandidateStage) => {
+    try {
+      const res = await api.updateCandidateStage(id, stage);
+      setCandidates((prev) =>
+        prev.map((c) =>
+          c.id === id
+            ? { ...c, stage: res.stage as CandidateStage, shortlist_status: res.shortlist_status }
+            : c
+        )
+      );
+
+      if (compareModalData) {
+        setCompareModalData((prev) => {
+          if (!prev) return null;
+          return {
+            ...prev,
+            candidates: prev.candidates.map((c) =>
+              c.id === id
+                ? { ...c, stage: res.stage as CandidateStage, shortlist_status: res.shortlist_status }
+                : c
+            ),
+          };
+        });
+      }
+
+      const updatedStats = await api.getStats();
+      setStats(updatedStats);
+    } catch (err: any) {
+      alert(`Failed to update candidate stage: ${err.message}`);
+    }
+  };
+
+  // Bulk Stage Update
+  const handleBulkUpdateStage = async (ids: string[], stage: CandidateStage) => {
+    try {
+      await Promise.all(ids.map((id) => api.updateCandidateStage(id, stage)));
+      setCandidates((prev) =>
+        prev.map((c) =>
+          ids.includes(c.id)
+            ? {
+                ...c,
+                stage: stage,
+                shortlist_status:
+                  stage === 'Shortlisted' ? true : stage === 'Rejected' ? false : c.shortlist_status,
+              }
+            : c
+        )
+      );
+      const updatedStats = await api.getStats();
+      setStats(updatedStats);
+    } catch (err: any) {
+      alert(`Failed to bulk update candidate stages: ${err.message}`);
+    }
+  };
+
+  // Interview Notes Update
+  const handleUpdateInterview = async (id: string, interviewData: Partial<InterviewNotes>) => {
+    try {
+      const res = await api.updateCandidateInterview(id, interviewData);
+      setCandidates((prev) =>
+        prev.map((c) =>
+          c.id === id
+            ? {
+                ...c,
+                stage: (res.stage as CandidateStage) || c.stage,
+                interview_notes: res.interview_notes,
+              }
+            : c
+        )
+      );
+    } catch (err: any) {
+      alert(`Failed to save interview notes: ${err.message}`);
+      throw err;
+    }
+  };
+
+  // Candidate Comparison
+  const handleCompareCandidates = async (candidateIds: string[]) => {
+    try {
+      const res = await api.compareCandidates(candidateIds);
+      setCompareModalData(res);
+    } catch (err: any) {
+      alert(`Comparison error: ${err.message}`);
     }
   };
 
@@ -194,15 +339,13 @@ export const App: React.FC = () => {
           setViewMode('app');
           setActiveTab('overview');
         }}
-        currentTheme={theme}
-        setTheme={setTheme as any}
       />
     );
   }
 
   // Render Recruitment Workspace
   return (
-    <div className="app-container" data-theme={theme} data-layout={layout}>
+    <div className="app-container" data-layout={layout}>
       {/* Sidebar */}
       <Sidebar
         activeTab={activeTab}
@@ -227,8 +370,6 @@ export const App: React.FC = () => {
           onRefresh={loadAllData}
           isRefreshing={isRefreshing}
           onNavigateUpload={() => setActiveTab('analyze')}
-          currentTheme={theme}
-          setTheme={setTheme}
           currentLayout={layout}
           setLayout={setLayout}
           onOpenLanding={() => setViewMode('landing')}
@@ -272,7 +413,10 @@ export const App: React.FC = () => {
               selectedJobId={selectedJobId}
               setSelectedJobId={setSelectedJobId}
               onCandidateAnalyzed={handleCandidateAnalyzed}
-              onNavigateCandidates={() => setActiveTab('candidates')}
+              onNavigateCandidates={(sessId) => {
+                if (sessId) setSelectedSessionId(sessId);
+                setActiveTab('candidates');
+              }}
               onSelectCandidate={(id) => setSelectedCandidateId(id)}
             />
           )}
@@ -282,10 +426,17 @@ export const App: React.FC = () => {
               candidates={candidates}
               jobs={jobs}
               selectedJobId={selectedJobId}
+              selectedSessionId={selectedSessionId}
+              sessions={sessions}
               onSelectCandidate={(id) => setSelectedCandidateId(id)}
               onToggleShortlist={handleToggleShortlist}
+              onBulkShortlist={handleBulkShortlist}
+              onUpdateStage={handleUpdateStage}
+              onBulkUpdateStage={handleBulkUpdateStage}
+              onCompareCandidates={handleCompareCandidates}
               onDeleteCandidate={handleDeleteCandidate}
               onExportCsv={handleExportCsv}
+              onNavigateUpload={() => setActiveTab('analyze')}
             />
           )}
 
@@ -322,8 +473,6 @@ export const App: React.FC = () => {
           {activeTab === 'settings' && (
             <SettingsPage
               onRefreshAll={loadAllData}
-              currentTheme={theme}
-              setTheme={setTheme}
               currentLayout={layout}
               setLayout={setLayout}
             />
@@ -337,7 +486,18 @@ export const App: React.FC = () => {
           candidate={selectedCandidate}
           onClose={() => setSelectedCandidateId(null)}
           onToggleShortlist={handleToggleShortlist}
+          onUpdateStage={handleUpdateStage}
+          onUpdateInterview={handleUpdateInterview}
           onDelete={handleDeleteCandidate}
+        />
+      )}
+
+      {/* Candidate Comparison Modal */}
+      {compareModalData && (
+        <CandidateCompareModal
+          comparison={compareModalData}
+          onClose={() => setCompareModalData(null)}
+          onToggleShortlist={handleToggleShortlist}
         />
       )}
 

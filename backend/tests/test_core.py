@@ -5,13 +5,25 @@ import pytest
 import pymupdf as fitz
 from fastapi.testclient import TestClient
 from app.main import app
-from app.storage import load_jobs, load_candidates, save_candidates, save_jobs
+from app.storage import (
+    load_jobs,
+    load_candidates,
+    save_candidates,
+    save_jobs,
+    load_sessions,
+    load_audit_logs,
+    create_system_backup,
+    restore_system_backup
+)
 from app.screening_engine import (
     normalize_text,
     match_single_skill,
     compute_tf_idf_similarity,
     analyze_skills,
-    screen_candidate
+    screen_candidate,
+    extract_skill_evidence,
+    METHODOLOGY_EXPLANATION,
+    DISCLAIMER_NOTICE
 )
 from app.resume_parser import (
     extract_text_from_pdf,
@@ -19,6 +31,7 @@ from app.resume_parser import (
     extract_candidate_email,
     extract_candidate_phone,
     extract_candidate_experience,
+    extract_candidate_education,
     parse_resume
 )
 
@@ -260,3 +273,280 @@ def test_demo_reset_preserves_real_records():
 
     # Cleanup test candidate
     client.delete("/api/candidates/real-cand-999")
+
+
+def test_evidence_snippet_extraction_and_disclaimer():
+    """Verify genuine text snippet extraction without hallucinating facts."""
+    resume_body = (
+        "Senior Cloud Architect\n"
+        "Engineered scalable microservices using FastAPI and Docker containers across AWS ECS.\n"
+        "Optimized complex PostgreSQL queries resulting in 40% latency reduction.\n"
+        "Lead developer with 6+ years experience in enterprise systems."
+    )
+    
+    # Matched skill returns authentic line from text
+    snippet_fastapi = extract_skill_evidence("FastAPI", resume_body)
+    assert "FastAPI" in snippet_fastapi
+    assert "Engineered scalable microservices" in snippet_fastapi
+
+    snippet_postgres = extract_skill_evidence("PostgreSQL", resume_body)
+    assert "PostgreSQL" in snippet_postgres
+
+    # Unmatched skill returns explicit not-detected message
+    snippet_unmatched = extract_skill_evidence("Kubernetes", "")
+    assert "Not detected" in snippet_unmatched
+
+    # Disclaimer and methodology explanations are defined
+    assert "decision-support" in DISCLAIMER_NOTICE.lower()
+    assert "TF-IDF" in METHODOLOGY_EXPLANATION
+    assert "Not detected" in METHODOLOGY_EXPLANATION
+
+
+def test_screening_sessions_workflow():
+    """Verify session creation, job snapshot preservation, and retrieval."""
+    # 1. Create a Job
+    job_res = client.post("/api/jobs", json={
+        "title": "Staff Platform Engineer",
+        "description": "Looking for Go and Kubernetes infrastructure specialists.",
+        "required_skills": ["Go", "Kubernetes"],
+        "preferred_skills": ["Terraform"]
+    })
+    job_id = job_res.json()["id"]
+
+    # 2. Create Screening Session
+    sess_res = client.post("/api/sessions", json={
+        "name": "Q4 Staff Infra Hiring Round",
+        "job_id": job_id
+    })
+    assert sess_res.status_code == 201
+    sess_data = sess_res.json()
+    sess_id = sess_data["id"]
+    assert sess_data["name"] == "Q4 Staff Infra Hiring Round"
+    assert sess_data["job_snapshot"]["title"] == "Staff Platform Engineer"
+    assert "Go" in sess_data["job_snapshot"]["required_skills"]
+
+    # 3. Retrieve sessions list
+    list_res = client.get("/api/sessions")
+    assert list_res.status_code == 200
+    assert any(s["id"] == sess_id for s in list_res.json())
+
+    # 4. Clean up
+    client.delete(f"/api/sessions/{sess_id}")
+    client.delete(f"/api/jobs/{job_id}")
+
+
+def test_candidate_comparison_endpoint():
+    """Verify side-by-side comparison of candidates with skill matrix and evidence snippets."""
+    # Fetch existing candidates
+    res = client.get("/api/candidates")
+    assert res.status_code == 200
+    all_cands = res.json()
+    assert len(all_cands) >= 2, "Need at least 2 candidates for comparison test"
+
+    cand1 = all_cands[0]["id"]
+    cand2 = all_cands[1]["id"]
+
+    # Valid 2-candidate comparison
+    cmp_res = client.post("/api/candidates/compare", json={"candidate_ids": [cand1, cand2]})
+    assert cmp_res.status_code == 200
+    data = cmp_res.json()
+    assert data["candidate_count"] == 2
+    assert len(data["candidates"]) == 2
+    assert "skill_matrix" in data
+    assert len(data["skill_matrix"]) > 0
+
+    # Skill matrix entry has evidence and matched flags
+    matrix_item = data["skill_matrix"][0]
+    assert "skill" in matrix_item
+    assert "is_required" in matrix_item
+    assert cand1 in matrix_item["candidates"]
+    assert "matched" in matrix_item["candidates"][cand1]
+    assert "evidence" in matrix_item["candidates"][cand1]
+
+    # Test up to 4 candidates if enough exist
+    if len(all_cands) >= 4:
+        cand3 = all_cands[2]["id"]
+        cand4 = all_cands[3]["id"]
+        cmp_4_res = client.post("/api/candidates/compare", json={"candidate_ids": [cand1, cand2, cand3, cand4]})
+        assert cmp_4_res.status_code == 200
+        assert cmp_4_res.json()["candidate_count"] == 4
+
+        # Rejection of invalid count (>4)
+        bad_5 = client.post("/api/candidates/compare", json={"candidate_ids": [cand1, cand2, cand3, cand4, cand1]})
+        assert bad_5.status_code == 400
+
+    # Rejection of invalid count (<2)
+    bad_cmp = client.post("/api/candidates/compare", json={"candidate_ids": [cand1]})
+    assert bad_cmp.status_code == 400
+
+
+def test_bulk_shortlist_and_quick_views():
+    """Verify bulk shortlisting and quick view filtering."""
+    res = client.get("/api/candidates")
+    cands = res.json()
+    assert len(cands) >= 2
+
+    ids = [cands[0]["id"], cands[1]["id"]]
+
+    # Bulk shortlist to True
+    bulk_res = client.post("/api/candidates/bulk-shortlist", json={
+        "candidate_ids": ids,
+        "shortlist_status": True
+    })
+    assert bulk_res.status_code == 200
+    assert bulk_res.json()["updated_count"] == 2
+
+    # Verify quick view filtering
+    shortlisted_res = client.get("/api/candidates?quick_view=shortlisted")
+    assert shortlisted_res.status_code == 200
+    shortlisted_list = shortlisted_res.json()
+    assert all(c["shortlist_status"] is True for c in shortlisted_list)
+
+    # Bulk revert to False
+    bulk_res2 = client.post("/api/candidates/bulk-shortlist", json={
+        "candidate_ids": ids,
+        "shortlist_status": False
+    })
+    assert bulk_res2.status_code == 200
+
+
+def test_audit_trail_logging():
+    """Verify audit trail logs events."""
+    audit_res = client.get("/api/audit?limit=20")
+    assert audit_res.status_code == 200
+    logs = audit_res.json()
+    assert isinstance(logs, list)
+    if len(logs) > 0:
+        entry = logs[0]
+        assert "id" in entry
+        assert "event_type" in entry
+        assert "timestamp" in entry
+
+
+def test_backup_and_validated_restore():
+    """Verify JSON backup export and validated restore behavior."""
+    # 1. Export backup snapshot
+    backup_res = client.get("/api/backup")
+    assert backup_res.status_code == 200
+    snapshot = backup_res.json()
+    assert snapshot["app"] == "TalentLens AI"
+    assert "candidates" in snapshot
+    assert "jobs" in snapshot
+    assert "sessions" in snapshot
+
+    # 2. Reject malformed restore payloads
+    malformed_res = client.post("/api/backup/restore", json={"invalid": "payload"})
+    assert malformed_res.status_code == 400
+
+    # 2b. Reject candidate with missing id/name or non-numeric score
+    bad_cand_payload = {
+        "jobs": [{"id": "j1", "title": "Dev"}],
+        "candidates": [{"id": "c1", "name": "Test", "similarity_score": "not_a_number"}]
+    }
+    bad_cand_res = client.post("/api/backup/restore", json=bad_cand_payload)
+    assert bad_cand_res.status_code == 400
+    assert "non-numeric" in bad_cand_res.json()["detail"]
+
+    # 2c. Reject job missing title
+    bad_job_payload = {
+        "jobs": [{"id": "j1"}],
+        "candidates": []
+    }
+    bad_job_res = client.post("/api/backup/restore", json=bad_job_payload)
+    assert bad_job_res.status_code == 400
+    assert "missing a valid 'title'" in bad_job_res.json()["detail"]
+
+    # 3. Valid restore
+    restore_res = client.post("/api/backup/restore", json=snapshot)
+    assert restore_res.status_code == 200
+    assert restore_res.json()["status"] == "success"
+
+
+def test_tfidf_reproducibility_and_empty_docs():
+    """Verify TF-IDF returns identical scores for identical inputs and safely handles empty docs."""
+    job_text = "Senior Python developer experienced in FastAPI, microservices, and Docker."
+    resume_text = "Proficient Python engineer building microservices with FastAPI and Docker."
+
+    score1, terms1 = compute_tf_idf_similarity(job_text, resume_text)
+    score2, terms2 = compute_tf_idf_similarity(job_text, resume_text)
+    assert score1 == score2
+    assert terms1 == terms2
+
+    # Empty inputs should return 0.0 without throwing exceptions
+    empty_score1, _ = compute_tf_idf_similarity("", resume_text)
+    assert empty_score1 == 0.0
+    empty_score2, _ = compute_tf_idf_similarity(job_text, "")
+    assert empty_score2 == 0.0
+    empty_score3, _ = compute_tf_idf_similarity("", "")
+    assert empty_score3 == 0.0
+
+
+def test_candidate_stage_and_interview_updates():
+    """Verify recruitment pipeline stage transitions and interview notes updates."""
+    # Ensure at least 1 candidate exists
+    candidates = load_candidates()
+    if len(candidates) == 0:
+        client.post("/api/demo/reset")
+        candidates = load_candidates()
+
+    assert len(candidates) > 0
+    candidate_id = candidates[0]["id"]
+
+    # 1. Update Stage to Interview
+    stage_res = client.patch(f"/api/candidates/{candidate_id}/stage", json={"stage": "Interview"})
+    assert stage_res.status_code == 200
+    assert stage_res.json()["stage"] == "Interview"
+
+    # 2. Update Interview Workspace Notes
+    interview_payload = {
+        "scheduled_date": "2026-10-24T14:30:00",
+        "status": "Scheduled",
+        "interviewer": "Elena Rostova (Staff ML Engineer)",
+        "rating": 5,
+        "notes": "Excellent explanation of transformer attention mechanisms and vector embeddings.",
+        "feedback": "Strong cultural alignment and depth in PyTorch.",
+        "next_steps": "Offer consideration"
+    }
+    inv_res = client.patch(f"/api/candidates/{candidate_id}/interview", json=interview_payload)
+    assert inv_res.status_code == 200
+    inv_data = inv_res.json()["interview_notes"]
+    assert inv_data["interviewer"] == "Elena Rostova (Staff ML Engineer)"
+    assert inv_data["rating"] == 5
+
+    # 3. Verify in Candidate Details
+    detail_res = client.get(f"/api/candidates/{candidate_id}")
+    assert detail_res.status_code == 200
+    cand_detail = detail_res.json()
+    assert cand_detail["stage"] == "Interview"
+    assert cand_detail["interview_notes"]["rating"] == 5
+
+    # 4. Verify stage filtering
+    filter_res = client.get("/api/candidates?stage=Interview")
+    assert filter_res.status_code == 200
+    filtered_list = filter_res.json()
+    assert any(c["id"] == candidate_id for c in filtered_list)
+
+
+def test_export_jobs_csv():
+    """Verify jobs CSV export endpoint."""
+    res = client.get("/api/export/jobs/csv")
+    assert res.status_code == 200
+    assert "text/csv" in res.headers["content-type"]
+    assert "talentlens_jobs.csv" in res.headers.get("content-disposition", "")
+    content = res.text
+    assert "Job ID" in content
+    assert "Job Title" in content
+    assert "Required Skills" in content
+
+
+def test_education_extraction():
+    """Verify degree extraction and safe fallback."""
+    text_with_degree = "Candidate Name\nEducation: B.Tech in Computer Science and Engineering\nExperience: 3 years"
+    edu = extract_candidate_education(text_with_degree)
+    assert "B.Tech" in edu
+
+    text_no_degree = "John Doe\nExperienced software programmer skilled in Python and JavaScript."
+    edu_none = extract_candidate_education(text_no_degree)
+    assert edu_none == "Not detected in extracted text"
+
+

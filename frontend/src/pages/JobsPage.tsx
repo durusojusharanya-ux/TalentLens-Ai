@@ -33,11 +33,11 @@ export const JobsPage: React.FC<JobsPageProps> = ({
       <div className="saas-card" style={{ padding: '20px 24px' }}>
         <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '16px' }}>
           <div>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#FFFFFF', margin: 0 }}>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-bright)', margin: 0 }}>
               Job Benchmarks & Role Profiles ({jobs.length})
             </h2>
             <p style={{ fontSize: '0.8rem', color: 'var(--text-dim)', margin: '4px 0 0' }}>
-              Define target criteria, responsibilities, and required skill dictionaries for TF-IDF screening
+              Define target criteria, responsibilities, and required skill dictionaries for AI resume screening
             </p>
           </div>
 
@@ -55,7 +55,7 @@ export const JobsPage: React.FC<JobsPageProps> = ({
               {/* Title & Department */}
               <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '12px', marginBottom: '12px' }}>
                 <div>
-                  <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#FFFFFF', margin: 0 }}>
+                  <h3 className="job-title" style={{ fontSize: '1.15rem', fontWeight: 600, color: 'var(--text-bright)', margin: 0 }}>
                     {job.title}
                   </h3>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', color: 'var(--primary)', marginTop: '4px' }}>
@@ -101,13 +101,13 @@ export const JobsPage: React.FC<JobsPageProps> = ({
               </div>
 
               {/* Description Snippet */}
-              <p style={{ fontSize: '0.85rem', color: '#94A3B8', lineHeight: 1.5, marginBottom: '16px', maxHeight: '72px', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', lineHeight: 1.5, marginBottom: '16px', maxHeight: '72px', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                 {job.description}
               </p>
 
               {/* Required Skills */}
               <div style={{ marginBottom: '12px' }}>
-                <div style={{ fontSize: '0.75rem', fontWeight: 600, color: '#E2E8F0', marginBottom: '6px' }}>
+                <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-bright)', marginBottom: '6px' }}>
                   Required Skills ({job.required_skills.length}):
                 </div>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>

@@ -59,8 +59,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
-        backgroundColor: 'var(--bg-sidebar)',
-        borderRight: '1px solid var(--border-subtle)',
+        background: 'linear-gradient(180deg, #F0F8FC 0%, #F5F0FF 48%, #FAF5FF 82%, #EAF6FF 100%)',
+        borderRight: '1px solid rgba(191, 219, 254, 0.7)',
+        backdropFilter: 'blur(16px)',
+        WebkitBackdropFilter: 'blur(16px)',
+        boxShadow: '2px 0 24px rgba(8, 126, 164, 0.04)',
         transition: 'width 0.22s cubic-bezier(0.16, 1, 0.3, 1)',
         width: isCollapsed ? '76px' : '260px',
         userSelect: 'none',
@@ -74,7 +77,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           alignItems: 'center',
           justifyContent: isCollapsed ? 'center' : 'space-between',
           padding: isCollapsed ? '0' : '0 20px',
-          borderBottom: '1px solid var(--border-subtle)',
+          borderBottom: '1px solid rgba(191, 219, 254, 0.65)',
         }}
       >
         <div
@@ -86,16 +89,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
               width: '38px',
               height: '38px',
               borderRadius: '10px',
-              backgroundColor: 'var(--primary)',
+              background: 'linear-gradient(135deg, #087EA4 0%, #8B5CF6 100%)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              boxShadow: '0 2px 10px var(--primary-glow)',
+              boxShadow: '0 2px 12px rgba(139, 92, 246, 0.35)',
               flexShrink: 0,
               color: '#FFFFFF',
             }}
           >
-            <Sparkles size={20} />
+            <Sparkles size={20} color="#A5F3FC" />
           </div>
           {!isCollapsed && (
             <div>
@@ -210,16 +213,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
             padding: '14px',
             margin: '10px',
             borderRadius: '10px',
-            backgroundColor: 'var(--bg-card-subtle)',
-            border: '1px solid var(--border-subtle)',
+            background: 'linear-gradient(135deg, #DDF2FF 0%, #EEE7FF 100%)',
+            border: '1px solid #DDD6FE',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--primary)', fontSize: '0.75rem', fontWeight: 700, marginBottom: '2px' }}>
-            <ShieldCheck size={14} />
-            Local ML Engine
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#8B5CF6', fontSize: '0.75rem', fontWeight: 700, marginBottom: '2px' }}>
+            <Sparkles size={14} color="#7C3AED" />
+            AI Resume Screening
           </div>
           <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)', lineHeight: 1.4 }}>
-            100% On-Device Processing. No external AI APIs or cloud databases.
+            High-accuracy candidate matching and transparent skill verification.
           </div>
         </div>
       ) : null}

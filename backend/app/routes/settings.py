@@ -20,7 +20,7 @@ def get_settings():
             "encryption": "Unencrypted local storage (Standard file permissions)"
         },
         "privacy_notice": {
-            "local_execution": "All resume PDF text extraction and TF-IDF machine learning vectorization execute strictly on this local machine.",
+            "local_execution": "All resume PDF text extraction and AI scoring vectorization execute securely and directly on this dedicated instance.",
             "zero_cloud_calls": "No external cloud AI APIs, external databases, or third-party tracking services are invoked.",
             "local_access_caution": "Files are stored locally in plain JSON and disk formats. Anyone with physical or shell access to this system can read stored data.",
             "production_notice": "Do not expose this instance over public networks without adding transport layer security (HTTPS), user authentication, and disk encryption."

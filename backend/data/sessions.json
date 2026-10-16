@@ -1,1 +1,263 @@
-[]
+[
+  {
+    "id": "sess-6a7f642b",
+    "name": "Machine Learning Engineer Screening (Oct 16, 2026 15:45)",
+    "job_id": "b8425785-a351-4553-ab56-e6bdccb69224",
+    "job_title": "Machine Learning Engineer",
+    "job_snapshot": {
+      "title": "Machine Learning Engineer",
+      "department": "Engineering",
+      "description": "Looking for ML specialist with PyTorch, scikit-learn, Python, and Git.",
+      "required_skills": [
+        "Python",
+        "PyTorch",
+        "scikit-learn",
+        "Git"
+      ],
+      "preferred_skills": [
+        "Docker"
+      ]
+    },
+    "candidate_ids": [
+      "ac290f01-cdcd-44fb-9067-ea7edb7574e1"
+    ],
+    "candidate_count": 1,
+    "avg_score": 17.5,
+    "created_at": "2026-10-16T15:45:30.310008Z",
+    "updated_at": "2026-10-16T15:45:30.340248Z"
+  },
+  {
+    "id": "sess-3b5f5c5c",
+    "name": "Senior Operations & Strategy Lead — Screening Run 10/16/2026",
+    "job_id": "job-sample-aiml-001",
+    "job_title": "Senior Operations & Strategy Lead",
+    "job_snapshot": {
+      "title": "Senior Operations & Strategy Lead",
+      "department": "Business Operations",
+      "description": "We are looking for an ambitious Operations & Strategy Lead to drive cross-functional initiatives, optimize business processes, and direct operational planning. The ideal candidate has demonstrated experience in Strategic Planning, Project Management, Operations Management, Data Analysis, Leadership, and Process Optimization. You will collaborate on workflow automation, manage stakeholder expectations, direct risk assessments, and establish performance metrics.",
+      "required_skills": [
+        "Strategic Planning",
+        "Project Management",
+        "Operations Management",
+        "Data Analysis",
+        "Leadership",
+        "Process Optimization",
+        "Risk Assessment",
+        "Stakeholder Management"
+      ],
+      "preferred_skills": [
+        "Budget Management",
+        "Change Management",
+        "Market Research",
+        "Performance Metrics"
+      ]
+    },
+    "candidate_ids": [],
+    "candidate_count": 0,
+    "avg_score": 0.0,
+    "created_at": "2026-10-16T15:41:56.441193Z",
+    "updated_at": "2026-10-16T15:41:56.441193Z"
+  },
+  {
+    "id": "sess-4f3ede90",
+    "name": "Machine Learning Engineer Screening (Oct 16, 2026 14:45)",
+    "job_id": "fb578201-5847-4ef6-977f-29f7749a76e3",
+    "job_title": "Machine Learning Engineer",
+    "job_snapshot": {
+      "title": "Machine Learning Engineer",
+      "department": "Engineering",
+      "description": "Looking for ML specialist with PyTorch, scikit-learn, Python, and Git.",
+      "required_skills": [
+        "Python",
+        "PyTorch",
+        "scikit-learn",
+        "Git"
+      ],
+      "preferred_skills": [
+        "Docker"
+      ]
+    },
+    "candidate_ids": [
+      "82626401-191e-4a45-9170-a3aa2421d36e"
+    ],
+    "candidate_count": 1,
+    "avg_score": 17.5,
+    "created_at": "2026-10-16T14:45:14.469487Z",
+    "updated_at": "2026-10-16T14:45:14.526147Z"
+  },
+  {
+    "id": "sess-efc5da65",
+    "name": "Machine Learning Engineer Screening (Oct 16, 2026 14:39)",
+    "job_id": "371ebaed-0c23-4131-b8da-6c628cfffd47",
+    "job_title": "Machine Learning Engineer",
+    "job_snapshot": {
+      "title": "Machine Learning Engineer",
+      "department": "Engineering",
+      "description": "Looking for ML specialist with PyTorch, scikit-learn, Python, and Git.",
+      "required_skills": [
+        "Python",
+        "PyTorch",
+        "scikit-learn",
+        "Git"
+      ],
+      "preferred_skills": [
+        "Docker"
+      ]
+    },
+    "candidate_ids": [
+      "0d8702c0-d480-433d-82cf-c4de57d23c12"
+    ],
+    "candidate_count": 1,
+    "avg_score": 17.5,
+    "created_at": "2026-10-16T14:39:56.071158Z",
+    "updated_at": "2026-10-16T14:39:56.181424Z"
+  },
+  {
+    "id": "sess-1a07517e",
+    "name": "Senior Product & Growth Manager — Screening Run 10/16/2026",
+    "job_id": "96ae2aee-614e-4909-9457-96754ffec302",
+    "job_title": "Senior Product & Growth Manager",
+    "job_snapshot": {
+      "title": "Senior Product & Growth Manager",
+      "department": "Product Strategy",
+      "description": "Seeking a seasoned Product & Growth Manager to lead product discovery, define market roadmaps, and synthesize user feedback into high-impact operational milestones. Must be proficient in Product Strategy, User Research, Agile Methodology, Roadmap Planning, Data Analysis, and Stakeholder Management.",
+      "required_skills": [
+        "Product Strategy",
+        "User Research",
+        "Agile Methodology",
+        "Roadmap Planning",
+        "Data Analysis",
+        "Stakeholder Management",
+        "Market Analysis"
+      ],
+      "preferred_skills": [
+        "Feature Prioritization",
+        "A/B Testing",
+        "Customer Journey",
+        "Executive Presentations"
+      ]
+    },
+    "candidate_ids": [],
+    "candidate_count": 0,
+    "avg_score": 0.0,
+    "created_at": "2026-10-16T14:30:12.420154Z",
+    "updated_at": "2026-10-16T14:30:12.420154Z"
+  },
+  {
+    "id": "sess-2680b78a",
+    "name": "Machine Learning Engineer Screening (Oct 16, 2026 14:17)",
+    "job_id": "481736cc-3f5f-48a5-8e65-b6c71950bb23",
+    "job_title": "Machine Learning Engineer",
+    "job_snapshot": {
+      "title": "Machine Learning Engineer",
+      "department": "Engineering",
+      "description": "Looking for ML specialist with PyTorch, scikit-learn, Python, and Git.",
+      "required_skills": [
+        "Python",
+        "PyTorch",
+        "scikit-learn",
+        "Git"
+      ],
+      "preferred_skills": [
+        "Docker"
+      ]
+    },
+    "candidate_ids": [
+      "8109279d-a988-48af-98b5-d40a49b63539"
+    ],
+    "candidate_count": 1,
+    "avg_score": 17.5,
+    "created_at": "2026-10-16T14:17:17.185558Z",
+    "updated_at": "2026-10-16T14:17:17.212456Z"
+  },
+  {
+    "id": "sess-d3473fa4",
+    "name": "Machine Learning Engineer Screening (Oct 16, 2026 13:33)",
+    "job_id": "ff573945-9f56-4f32-98bc-6021692573ec",
+    "job_title": "Machine Learning Engineer",
+    "job_snapshot": {
+      "title": "Machine Learning Engineer",
+      "department": "Engineering",
+      "description": "Looking for ML specialist with PyTorch, scikit-learn, Python, and Git.",
+      "required_skills": [
+        "Python",
+        "PyTorch",
+        "scikit-learn",
+        "Git"
+      ],
+      "preferred_skills": [
+        "Docker"
+      ]
+    },
+    "candidate_ids": [
+      "090a992b-34ab-47ed-b846-a8eebf166f21"
+    ],
+    "candidate_count": 1,
+    "avg_score": 17.5,
+    "created_at": "2026-10-16T13:33:14.940113Z",
+    "updated_at": "2026-10-16T13:33:14.988842Z"
+  },
+  {
+    "id": "sess-0bb7cc79",
+    "name": "Machine Learning Engineer Screening (Oct 16, 2026 11:06)",
+    "job_id": "2df96ba7-74e2-4fb9-ac17-f2b9aca49e66",
+    "job_title": "Machine Learning Engineer",
+    "job_snapshot": {
+      "title": "Machine Learning Engineer",
+      "department": "Engineering",
+      "description": "Looking for ML specialist with PyTorch, scikit-learn, Python, and Git.",
+      "required_skills": [
+        "Python",
+        "PyTorch",
+        "scikit-learn",
+        "Git"
+      ],
+      "preferred_skills": [
+        "Docker"
+      ]
+    },
+    "candidate_ids": [
+      "b70d1f85-7e55-4b2a-88a7-3f1d4f2365e4"
+    ],
+    "candidate_count": 1,
+    "avg_score": 17.5,
+    "created_at": "2026-10-16T11:06:45.732964Z",
+    "updated_at": "2026-10-16T11:06:45.770705Z"
+  },
+  {
+    "id": "session-demo-001",
+    "name": "Operations & Strategy Screening Batch",
+    "job_id": "job-sample-aiml-001",
+    "job_title": "Senior Operations & Strategy Lead",
+    "job_snapshot": {
+      "title": "Senior Operations & Strategy Lead",
+      "department": "Business Operations",
+      "description": "We are looking for an ambitious Operations & Strategy Lead to drive cross-functional initiatives, optimize business processes, and direct operational planning.",
+      "required_skills": [
+        "Strategic Planning",
+        "Project Management",
+        "Operations Management",
+        "Data Analysis",
+        "Leadership",
+        "Process Optimization",
+        "Risk Assessment",
+        "Stakeholder Management"
+      ],
+      "preferred_skills": [
+        "Budget Management",
+        "Change Management",
+        "Market Research",
+        "Performance Metrics"
+      ]
+    },
+    "candidate_ids": [
+      "demo-bf2da456",
+      "demo-ca25dfb8",
+      "demo-d3b8b342"
+    ],
+    "candidate_count": 3,
+    "avg_score": 27.4,
+    "created_at": "2026-10-16T10:41:48.750399Z",
+    "updated_at": "2026-10-16T10:41:48.750399Z"
+  }
+]

@@ -1,56 +1,55 @@
 [
   {
     "id": "job-sample-aiml-001",
-    "title": "AI/ML Engineer Intern",
-    "department": "AI Research & Development",
-    "description": "We are looking for an ambitious AI/ML Engineer Intern to build, fine-tune, and evaluate machine learning models. The ideal candidate has hands-on experience with Python, scikit-learn, PyTorch or TensorFlow, Machine Learning fundamentals, and data manipulation libraries such as Pandas and NumPy. You will collaborate on natural language processing pipelines, integrate models with REST APIs, and apply Git for version control. Exposure to FastAPI and Docker is a strong plus.",
+    "title": "Senior Operations & Strategy Lead",
+    "department": "Business Operations",
+    "description": "We are looking for an ambitious Operations & Strategy Lead to drive cross-functional initiatives, optimize business processes, and direct operational planning. The ideal candidate has demonstrated experience in Strategic Planning, Project Management, Operations Management, Data Analysis, Leadership, and Process Optimization. You will collaborate on workflow automation, manage stakeholder expectations, direct risk assessments, and establish performance metrics.",
     "required_skills": [
-      "Python",
-      "Machine Learning",
-      "scikit-learn",
-      "PyTorch",
-      "Pandas",
-      "NumPy",
-      "Git",
-      "REST APIs"
+      "Strategic Planning",
+      "Project Management",
+      "Operations Management",
+      "Data Analysis",
+      "Leadership",
+      "Process Optimization",
+      "Risk Assessment",
+      "Stakeholder Management"
     ],
     "preferred_skills": [
-      "FastAPI",
-      "Docker",
-      "Deep Learning",
-      "Natural Language Processing"
+      "Budget Management",
+      "Change Management",
+      "Market Research",
+      "Performance Metrics"
     ],
-    "min_experience_years": 0.5,
+    "min_experience_years": 3.0,
     "location": "Bengaluru / Hybrid",
-    "employment_type": "Internship",
+    "employment_type": "Full-time",
     "created_at": "2026-10-16T06:00:08.755120Z",
-    "updated_at": "2026-10-16T06:00:08.755120Z"
+    "updated_at": "2026-10-16T16:10:00.000000Z"
   },
   {
     "id": "96ae2aee-614e-4909-9457-96754ffec302",
-    "title": "Full-Stack Developer",
-    "department": "Product Engineering",
-    "description": "Seeking a Full-Stack Developer to build responsive user interfaces and robust web APIs. Must be proficient in React, TypeScript, JavaScript, HTML, CSS, and modern backend frameworks like Node.js or Python FastAPI. Experience with relational databases and Docker is preferred.",
+    "title": "Senior Product & Growth Manager",
+    "department": "Product Strategy",
+    "description": "Seeking a seasoned Product & Growth Manager to lead product discovery, define market roadmaps, and synthesize user feedback into high-impact operational milestones. Must be proficient in Product Strategy, User Research, Agile Methodology, Roadmap Planning, Data Analysis, and Stakeholder Management.",
     "required_skills": [
-      "React",
-      "TypeScript",
-      "JavaScript",
-      "HTML",
-      "CSS",
-      "Python",
-      "REST APIs",
-      "Git"
+      "Product Strategy",
+      "User Research",
+      "Agile Methodology",
+      "Roadmap Planning",
+      "Data Analysis",
+      "Stakeholder Management",
+      "Market Analysis"
     ],
     "preferred_skills": [
-      "FastAPI",
-      "Docker",
-      "PostgreSQL",
-      "Tailwind CSS"
+      "Feature Prioritization",
+      "A/B Testing",
+      "Customer Journey",
+      "Executive Presentations"
     ],
-    "min_experience_years": 1.5,
+    "min_experience_years": 3.5,
     "location": "Hybrid",
     "employment_type": "Full-time",
     "created_at": "2026-10-16T06:17:41.202473Z",
-    "updated_at": "2026-10-16T06:17:41.202473Z"
+    "updated_at": "2026-10-16T16:10:00.000000Z"
   }
 ]

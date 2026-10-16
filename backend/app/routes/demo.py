@@ -15,7 +15,7 @@ def reset_demo_data_endpoint():
     count = reset_demo_data(demo_candidates, sample_job)
     return {
         "status": "success",
-        "message": f"Successfully initialized {count} synthetic demo candidates scored using the local ML pipeline.",
+        "message": f"Successfully initialized {count} synthetic demo candidates scored using the screening pipeline.",
         "demo_count": count
     }
 

@@ -57,14 +57,16 @@ export const ShortlistPage: React.FC<ShortlistPageProps> = ({
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-      {/* Shortlist Metric Header Cards */}
+      {/* Shortlist Metric Header Cards with Tints */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px' }}>
-        <div className="saas-card" style={{ padding: '20px' }}>
+        <div className="saas-card" style={{ padding: '20px', background: 'linear-gradient(135deg, #DDF7EA 0%, #DDFBFA 100%)', borderColor: '#A7F3D0' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Shortlisted Talent</span>
-            <BookmarkCheck size={18} color="#10B981" />
+            <span style={{ fontSize: '0.8rem', color: '#047857', fontWeight: 600 }}>Shortlisted Talent</span>
+            <div style={{ width: '28px', height: '28px', borderRadius: '6px', backgroundColor: '#D1FAE5', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <BookmarkCheck size={16} color="#059669" />
+            </div>
           </div>
-          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#34D399' }}>
+          <div className="metric-val" style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--success)' }}>
             {shortlistedCandidates.length}
           </div>
           <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>
@@ -72,16 +74,18 @@ export const ShortlistPage: React.FC<ShortlistPageProps> = ({
           </div>
         </div>
 
-        <div className="saas-card" style={{ padding: '20px' }}>
+        <div className="saas-card" style={{ padding: '20px', background: 'linear-gradient(135deg, #EAF6FF 0%, #DDF2FF 100%)', borderColor: '#BFDBFE' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Avg Shortlist Score</span>
-            <TrendingUp size={18} color="#6366F1" />
+            <span style={{ fontSize: '0.8rem', color: '#075985', fontWeight: 600 }}>Avg Shortlist Score</span>
+            <div style={{ width: '28px', height: '28px', borderRadius: '6px', backgroundColor: '#DBEAFE', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <TrendingUp size={16} color="#087EA4" />
+            </div>
           </div>
-          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#FFFFFF' }}>
+          <div className="metric-val" style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--primary)' }}>
             {avgShortlistScore.toFixed(1)}%
           </div>
           <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>
-            Mean TF-IDF similarity across shortlisted pool
+            Mean match similarity across shortlisted pool
           </div>
         </div>
 
@@ -98,7 +102,7 @@ export const ShortlistPage: React.FC<ShortlistPageProps> = ({
       </div>
 
       {/* Search and Sort Toolbar */}
-      <div className="saas-card" style={{ padding: '16px 20px' }}>
+      <div className="saas-card" style={{ padding: '16px 20px', background: 'linear-gradient(135deg, rgba(221, 251, 250, 0.65) 0%, rgba(240, 249, 255, 0.85) 100%)', border: '1px solid rgba(165, 243, 252, 0.85)' }}>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ position: 'relative', flex: 1, minWidth: '240px' }}>
             <Search size={16} color="var(--text-dim)" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
@@ -143,17 +147,17 @@ export const ShortlistPage: React.FC<ShortlistPageProps> = ({
                 <tr key={c.id}>
                   <td>
                     <div>
-                      <div style={{ fontWeight: 600, color: '#FFFFFF', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <div className="candidate-name" style={{ fontWeight: 600, color: 'var(--text-bright)', display: 'flex', alignItems: 'center', gap: '6px' }}>
                         {c.name}
                         {c.is_demo && <span className="badge badge-demo">Demo</span>}
                       </div>
                       <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>{c.email}</div>
                     </div>
                   </td>
-                  <td style={{ color: 'var(--text-muted)' }}>{c.job_title}</td>
+                  <td className="job-title" style={{ color: 'var(--text-muted)' }}>{c.job_title}</td>
                   <td>
                     <span
-                      className={`badge ${
+                      className={`badge metric-val ${
                         c.similarity_score >= 70
                           ? 'badge-strong'
                           : c.similarity_score >= 40
@@ -165,7 +169,7 @@ export const ShortlistPage: React.FC<ShortlistPageProps> = ({
                     </span>
                   </td>
                   <td>
-                    <span style={{ fontWeight: 600, color: '#38BDF8', fontSize: '0.82rem' }}>
+                    <span className="metric-val" style={{ fontWeight: 600, color: 'var(--primary)', fontSize: '0.82rem' }}>
                       {c.required_skill_coverage.toFixed(0)}%
                     </span>
                   </td>
@@ -194,7 +198,7 @@ export const ShortlistPage: React.FC<ShortlistPageProps> = ({
                       <button
                         onClick={() => onToggleShortlist(c.id, true)}
                         className="btn btn-outline btn-sm"
-                        style={{ padding: '4px 8px', color: '#F87171' }}
+                        style={{ padding: '4px 8px', color: 'var(--danger)' }}
                         title="Remove from shortlist"
                       >
                         <XCircle size={14} />
@@ -205,8 +209,29 @@ export const ShortlistPage: React.FC<ShortlistPageProps> = ({
               ))
             ) : (
               <tr>
-                <td colSpan={7} style={{ textAlign: 'center', padding: '40px 0', color: 'var(--text-dim)' }}>
-                  No candidates have been shortlisted yet. Review candidates in the directory to add them here.
+                <td colSpan={7} style={{ textAlign: 'center', padding: '48px 20px' }}>
+                  <div style={{ maxWidth: '420px', margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
+                    <div style={{ width: '48px', height: '48px', borderRadius: '50%', backgroundColor: 'rgba(56, 189, 248, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <BookmarkCheck size={24} color="var(--primary)" />
+                    </div>
+                    <div style={{ fontWeight: 700, fontSize: '1rem', color: 'var(--text-bright)' }}>
+                      {search ? 'No Matching Shortlisted Candidates' : 'Your Shortlist Is Empty'}
+                    </div>
+                    <p style={{ fontSize: '0.82rem', color: 'var(--text-dim)', margin: 0, lineHeight: 1.5 }}>
+                      {search
+                        ? `No shortlisted candidates match "${search}". Try clearing your query or checking spelling.`
+                        : 'Review evaluated profiles in the candidate directory and click the bookmark action to curate your interview roster.'}
+                    </p>
+                    {search && (
+                      <button
+                        onClick={() => setSearch('')}
+                        className="btn btn-secondary btn-sm"
+                        style={{ marginTop: '6px' }}
+                      >
+                        Clear Search Filter
+                      </button>
+                    )}
+                  </div>
                 </td>
               </tr>
             )}

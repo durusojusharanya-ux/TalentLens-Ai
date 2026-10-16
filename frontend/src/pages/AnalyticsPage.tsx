@@ -27,45 +27,45 @@ interface AnalyticsPageProps {
 }
 
 export const AnalyticsPage: React.FC<AnalyticsPageProps> = ({ stats }) => {
-  const distributionColors = ['#64748B', '#6366F1', '#818CF8', '#0EA5E9', '#10B981'];
+  const distributionColors = ['#94A3B8', '#D97706', '#087EA4', '#8B5CF6', '#059669'];
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
       {/* Disclaimer */}
       <div className="disclaimer-banner">
-        <Info size={18} style={{ flexShrink: 0, marginTop: '2px', color: '#818CF8' }} />
+        <Info size={18} style={{ flexShrink: 0, marginTop: '2px', color: 'var(--primary)' }} />
         <div>
-          <strong>Analytics Telemetry:</strong> All metrics, distributions, and skill statistics are dynamically calculated from real local JSON records. No mocked or random analytical data.
+          <strong>Analytics Telemetry:</strong> All metrics, distributions, and skill statistics are dynamically calculated from candidate evaluation records. Real-time screening telemetry.
         </div>
       </div>
 
-      {/* Summary KPI Strip */}
+      {/* Summary KPI Strip with Coordinated Multi-Shade Pastel Gradients */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
-        <div className="saas-card" style={{ padding: '20px' }}>
-          <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '6px' }}>Analyzed Cohort</div>
-          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#FFFFFF' }}>{stats?.total_resumes ?? 0}</div>
+        <div className="saas-card" style={{ padding: '20px', background: 'linear-gradient(135deg, #EAF6FF 0%, #DDF2FF 100%)', borderColor: '#BFDBFE' }}>
+          <div style={{ fontSize: '0.8rem', color: '#075985', fontWeight: 600, marginBottom: '6px' }}>Analyzed Cohort</div>
+          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--text-bright)' }}>{stats?.total_resumes ?? 0}</div>
           <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>Total applicants evaluated</div>
         </div>
 
-        <div className="saas-card" style={{ padding: '20px' }}>
-          <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '6px' }}>Cohort Mean Score</div>
-          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#818CF8' }}>
+        <div className="saas-card" style={{ padding: '20px', background: 'linear-gradient(135deg, #F2E8FF 0%, #EEE7FF 100%)', borderColor: '#DDD6FE' }}>
+          <div style={{ fontSize: '0.8rem', color: '#6D28D9', fontWeight: 600, marginBottom: '6px' }}>Cohort Mean Score</div>
+          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--ai-purple)' }}>
             {(stats?.avg_match_score ?? 0).toFixed(1)}%
           </div>
           <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>Average cosine similarity</div>
         </div>
 
-        <div className="saas-card" style={{ padding: '20px' }}>
-          <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '6px' }}>Cohort Peak Score</div>
-          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#34D399' }}>
+        <div className="saas-card" style={{ padding: '20px', background: 'linear-gradient(135deg, #DDFBFA 0%, #E0F2FE 100%)', borderColor: '#A5F3FC' }}>
+          <div style={{ fontSize: '0.8rem', color: '#087EA4', fontWeight: 600, marginBottom: '6px' }}>Cohort Peak Score</div>
+          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#087EA4' }}>
             {(stats?.highest_match_score ?? 0).toFixed(1)}%
           </div>
           <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>Highest textual alignment</div>
         </div>
 
-        <div className="saas-card" style={{ padding: '20px' }}>
-          <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '6px' }}>Conversion Rate</div>
-          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#F59E0B' }}>
+        <div className="saas-card" style={{ padding: '20px', background: 'linear-gradient(135deg, #FFF0F6 0%, #FCE7F3 100%)', borderColor: '#FBCFE8' }}>
+          <div style={{ fontSize: '0.8rem', color: '#BE185D', fontWeight: 600, marginBottom: '6px' }}>Conversion Rate</div>
+          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--accent-pink)' }}>
             {stats && stats.total_resumes > 0
               ? `${((stats.shortlisted_candidates / stats.total_resumes) * 100).toFixed(0)}%`
               : '0%'}
@@ -78,27 +78,29 @@ export const AnalyticsPage: React.FC<AnalyticsPageProps> = ({ stats }) => {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(420px, 1fr))', gap: '20px' }}>
         {/* Match Score Distribution */}
         <div className="saas-card">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
             <div>
-              <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#FFFFFF' }}>
+              <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--text-bright)' }}>
                 Text Similarity Distribution
               </h3>
               <p style={{ fontSize: '0.78rem', color: 'var(--text-dim)' }}>
                 Candidate count grouped by 20% similarity brackets
               </p>
             </div>
-            <BarChart2 size={20} color="var(--primary)" />
+            <div style={{ width: '32px', height: '32px', borderRadius: '8px', backgroundColor: 'var(--primary-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <BarChart2 size={18} color="var(--primary)" />
+            </div>
           </div>
 
-          <div style={{ height: '280px', width: '100%' }}>
+          <div style={{ height: '240px', width: '100%' }}>
             {stats && stats.score_distribution.some((d) => d.count > 0) ? (
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={stats.score_distribution} margin={{ top: 20, right: 20, left: -20, bottom: 10 }}>
-                  <XAxis dataKey="range" stroke="#64748B" fontSize={12} tickLine={false} />
-                  <YAxis stroke="#64748B" fontSize={12} tickLine={false} allowDecimals={false} />
+                  <XAxis dataKey="range" stroke="var(--text-dim)" fontSize={12} tickLine={false} />
+                  <YAxis stroke="var(--text-dim)" fontSize={12} tickLine={false} allowDecimals={false} />
                   <Tooltip
-                    contentStyle={{ backgroundColor: '#0F172A', borderColor: '#334155', borderRadius: '8px', color: '#FFF' }}
-                    labelStyle={{ color: '#94A3B8' }}
+                    contentStyle={{ backgroundColor: 'var(--bg-card)', borderColor: 'var(--border-strong)', borderRadius: '8px', color: 'var(--text-main)' }}
+                    labelStyle={{ color: 'var(--text-muted)' }}
                   />
                   <Bar dataKey="count" radius={[6, 6, 0, 0]}>
                     {stats.score_distribution.map((_, index) => (
@@ -114,39 +116,56 @@ export const AnalyticsPage: React.FC<AnalyticsPageProps> = ({ stats }) => {
               </div>
             )}
           </div>
+
+          {/* Color Legend for Similarity Distribution */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '14px', marginTop: '12px', borderTop: '1px solid var(--border-subtle)', paddingTop: '10px' }}>
+            {[
+              { label: '0–20%', color: '#94A3B8' },
+              { label: '21–40%', color: '#F59E0B' },
+              { label: '41–60%', color: '#2563EB' },
+              { label: '61–80%', color: '#7C3AED' },
+              { label: '81–100%', color: '#059669' },
+            ].map((b, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.72rem', color: 'var(--text-muted)' }}>
+                <span style={{ width: '8px', height: '8px', borderRadius: '2px', backgroundColor: b.color }} />
+                <span>{b.label}</span>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Pipeline Breakdown */}
         <div className="saas-card">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
             <div>
-              <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#FFFFFF' }}>
+              <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--text-bright)' }}>
                 Screening Pipeline Distribution
               </h3>
               <p style={{ fontSize: '0.78rem', color: 'var(--text-dim)' }}>
                 Proportion of shortlisted applicants vs pending review
               </p>
             </div>
-            <PieChartIcon size={20} color="var(--accent-cyan)" />
+            <div style={{ width: '32px', height: '32px', borderRadius: '8px', backgroundColor: '#ECFDF5', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <PieChartIcon size={18} color="var(--success)" />
+            </div>
           </div>
 
-          <div style={{ height: '280px', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ height: '240px', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             {stats && stats.total_resumes > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
                     data={stats.status_breakdown}
-                    innerRadius={70}
-                    outerRadius={105}
+                    innerRadius={65}
+                    outerRadius={95}
                     paddingAngle={5}
                     dataKey="value"
                   >
-                    {stats.status_breakdown.map((entry, index) => (
-                      <Cell key={`slice-${index}`} fill={entry.color} />
-                    ))}
+                    <Cell fill="var(--success)" />
+                    <Cell fill="var(--primary)" />
                   </Pie>
                   <Tooltip
-                    contentStyle={{ backgroundColor: '#0F172A', borderColor: '#334155', borderRadius: '8px', color: '#FFF' }}
+                    contentStyle={{ backgroundColor: 'var(--bg-card)', borderColor: 'var(--border-strong)', borderRadius: '8px', color: 'var(--text-main)' }}
                   />
                 </PieChart>
               </ResponsiveContainer>
@@ -158,13 +177,13 @@ export const AnalyticsPage: React.FC<AnalyticsPageProps> = ({ stats }) => {
             )}
           </div>
 
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '32px', marginTop: '10px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', color: '#34D399' }}>
-              <span style={{ width: '12px', height: '12px', borderRadius: '50%', backgroundColor: '#10B981' }} />
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '32px', marginTop: '12px', borderTop: '1px solid var(--border-subtle)', paddingTop: '10px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', color: 'var(--success)', fontWeight: 600 }}>
+              <span style={{ width: '12px', height: '12px', borderRadius: '50%', backgroundColor: 'var(--success)' }} />
               Shortlisted: {stats?.shortlisted_candidates ?? 0}
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', color: '#818CF8' }}>
-              <span style={{ width: '12px', height: '12px', borderRadius: '50%', backgroundColor: '#6366F1' }} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', color: 'var(--primary)', fontWeight: 600 }}>
+              <span style={{ width: '12px', height: '12px', borderRadius: '50%', backgroundColor: 'var(--primary)' }} />
               Under Review: {(stats?.total_resumes ?? 0) - (stats?.shortlisted_candidates ?? 0)}
             </div>
           </div>
@@ -175,25 +194,25 @@ export const AnalyticsPage: React.FC<AnalyticsPageProps> = ({ stats }) => {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(420px, 1fr))', gap: '20px' }}>
         {/* Most Frequently Matched */}
         <div className="saas-card">
-          <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#FFFFFF', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <CheckCircle size={18} color="#10B981" /> Top Matched Competencies
+          <h3 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-bright)', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <CheckCircle size={18} color="var(--success)" /> Top Matched Competencies
           </h3>
           {stats && stats.top_matched_skills.length > 0 ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
               {stats.top_matched_skills.map((item, idx) => (
                 <div key={idx}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', marginBottom: '6px' }}>
-                    <span style={{ color: '#E2E8F0', fontWeight: 600 }}>{item.skill}</span>
-                    <span style={{ color: '#34D399', fontWeight: 700 }}>
+                    <span style={{ color: 'var(--text-main)', fontWeight: 600 }}>{item.skill}</span>
+                    <span style={{ color: 'var(--success)', fontWeight: 700 }}>
                       {item.count} resumes ({((item.count / Math.max(1, stats.total_resumes)) * 100).toFixed(0)}%)
                     </span>
                   </div>
-                  <div style={{ height: '8px', width: '100%', backgroundColor: 'rgba(255, 255, 255, 0.06)', borderRadius: '4px' }}>
+                  <div style={{ height: '8px', width: '100%', backgroundColor: 'var(--border-subtle)', borderRadius: '4px' }}>
                     <div
                       style={{
                         height: '100%',
                         width: `${Math.min(100, (item.count / Math.max(1, stats.total_resumes)) * 100)}%`,
-                        background: 'linear-gradient(90deg, #059669, #10B981)',
+                        background: 'linear-gradient(90deg, var(--chart-primary), var(--success))',
                         borderRadius: '4px',
                       }}
                     />
@@ -210,25 +229,25 @@ export const AnalyticsPage: React.FC<AnalyticsPageProps> = ({ stats }) => {
 
         {/* Most Frequently Missing */}
         <div className="saas-card">
-          <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#FFFFFF', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <AlertCircle size={18} color="#EF4444" /> Most Prevalent Skill Gaps
+          <h3 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-bright)', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <AlertCircle size={18} color="var(--danger)" /> Most Prevalent Skill Gaps
           </h3>
           {stats && stats.top_missing_skills.length > 0 ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
               {stats.top_missing_skills.map((item, idx) => (
                 <div key={idx}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', marginBottom: '6px' }}>
-                    <span style={{ color: '#E2E8F0', fontWeight: 600 }}>{item.skill}</span>
-                    <span style={{ color: '#F87171', fontWeight: 700 }}>
+                    <span style={{ color: 'var(--text-main)', fontWeight: 600 }}>{item.skill}</span>
+                    <span style={{ color: 'var(--danger)', fontWeight: 700 }}>
                       {item.count} missing ({((item.count / Math.max(1, stats.total_resumes)) * 100).toFixed(0)}%)
                     </span>
                   </div>
-                  <div style={{ height: '8px', width: '100%', backgroundColor: 'rgba(255, 255, 255, 0.06)', borderRadius: '4px' }}>
+                  <div style={{ height: '8px', width: '100%', backgroundColor: 'var(--border-subtle)', borderRadius: '4px' }}>
                     <div
                       style={{
                         height: '100%',
                         width: `${Math.min(100, (item.count / Math.max(1, stats.total_resumes)) * 100)}%`,
-                        background: 'linear-gradient(90deg, #DC2626, #EF4444)',
+                        background: 'var(--danger)',
                         borderRadius: '4px',
                       }}
                     />

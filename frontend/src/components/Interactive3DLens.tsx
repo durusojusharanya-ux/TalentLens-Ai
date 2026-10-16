@@ -61,25 +61,25 @@ export const Interactive3DLens: React.FC<Interactive3DLensProps> = ({ onExploreD
         <div className="lens-aperture-core">
           <div
             style={{
-              width: '48px',
-              height: '48px',
+              width: '50px',
+              height: '50px',
               borderRadius: '14px',
-              backgroundColor: 'var(--primary)',
+              background: 'linear-gradient(135deg, #087EA4 0%, #8B5CF6 100%)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               color: '#FFFFFF',
-              boxShadow: '0 4px 14px var(--primary-glow)',
+              boxShadow: '0 4px 16px rgba(139, 92, 246, 0.35)',
               marginBottom: '10px',
             }}
           >
-            <Sparkles size={24} />
+            <Sparkles size={24} color="#A5F3FC" />
           </div>
           <div style={{ fontFamily: 'var(--font-display)', fontSize: '1.15rem', fontWeight: 700, color: 'var(--text-bright)' }}>
             TalentLens Aperture
           </div>
           <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', marginTop: '2px', maxWidth: '170px' }}>
-            TF-IDF vector alignment & skill verification
+            Skill vector alignment & verification
           </div>
           <div
             style={{
@@ -89,17 +89,18 @@ export const Interactive3DLens: React.FC<Interactive3DLensProps> = ({ onExploreD
               gap: '4px',
               fontSize: '0.7rem',
               fontWeight: 700,
-              color: 'var(--primary)',
-              backgroundColor: 'var(--badge-strong-bg)',
+              color: '#7C3AED',
+              backgroundColor: '#F5F3FF',
+              border: '1px solid #DDD6FE',
               padding: '2px 8px',
               borderRadius: '999px',
             }}
           >
-            <ShieldCheck size={12} /> Local Machine Learning
+            <Sparkles size={12} /> Intelligent Candidate Matching
           </div>
         </div>
 
-        {/* Floating Skill Nodes around Aperture */}
+        {/* Floating Skill Nodes around Aperture with Multi-Color accents */}
         <div
           className="floating-skill-node"
           style={{
@@ -108,7 +109,7 @@ export const Interactive3DLens: React.FC<Interactive3DLensProps> = ({ onExploreD
             transform: `translateZ(${isHovered ? 40 : 20}px)`,
           }}
         >
-          <span style={{ color: 'var(--primary)' }}>✦</span> Python 3.11
+          <span style={{ color: '#7C3AED' }}>✦</span> Strategic Leadership
         </div>
 
         <div
@@ -119,7 +120,7 @@ export const Interactive3DLens: React.FC<Interactive3DLensProps> = ({ onExploreD
             transform: `translateZ(${isHovered ? 50 : 25}px)`,
           }}
         >
-          <span style={{ color: 'var(--accent-secondary)' }}>●</span> scikit-learn
+          <span style={{ color: '#0891B2' }}>●</span> Data Analytics
         </div>
 
         <div
@@ -130,7 +131,7 @@ export const Interactive3DLens: React.FC<Interactive3DLensProps> = ({ onExploreD
             transform: `translateZ(${isHovered ? 45 : 20}px)`,
           }}
         >
-          <span style={{ color: 'var(--primary)' }}>✦</span> PyTorch
+          <span style={{ color: '#059669' }}>✦</span> Talent Assessment
         </div>
 
         <div
@@ -141,7 +142,7 @@ export const Interactive3DLens: React.FC<Interactive3DLensProps> = ({ onExploreD
             transform: `translateZ(${isHovered ? 35 : 15}px)`,
           }}
         >
-          <span style={{ color: 'var(--accent-secondary)' }}>●</span> FastAPI
+          <span style={{ color: '#087EA4' }}>●</span> Project Delivery
         </div>
 
         <div
@@ -152,17 +153,18 @@ export const Interactive3DLens: React.FC<Interactive3DLensProps> = ({ onExploreD
             transform: `translateZ(${isHovered ? 30 : 10}px)`,
           }}
         >
-          <span style={{ color: 'var(--primary)' }}>✦</span> Cosine Sim
+          <span style={{ color: '#DB2777' }}>✦</span> Skill Alignment
         </div>
 
-        {/* Depth Candidate Profile Card #1 */}
+        {/* Depth Candidate Profile Card #1: Teal Accent */}
         <div
           className="candidate-depth-card"
           style={{
             top: '-35px',
             right: '30px',
             transform: `translateZ(${isHovered ? 60 : 30}px) scale(0.92)`,
-            borderColor: 'var(--primary)',
+            borderColor: '#A7F3D0',
+            background: 'linear-gradient(135deg, #FFFFFF 0%, #DDF7EA 100%)',
           }}
         >
           <div
@@ -170,8 +172,8 @@ export const Interactive3DLens: React.FC<Interactive3DLensProps> = ({ onExploreD
               width: '32px',
               height: '32px',
               borderRadius: '8px',
-              backgroundColor: 'var(--badge-strong-bg)',
-              color: 'var(--primary)',
+              background: 'linear-gradient(135deg, #059669 0%, #087EA4 100%)',
+              color: '#FFFFFF',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -182,18 +184,20 @@ export const Interactive3DLens: React.FC<Interactive3DLensProps> = ({ onExploreD
             AV
           </div>
           <div>
-            <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-bright)' }}>Aria Vance</div>
-            <div style={{ fontSize: '0.7rem', color: 'var(--primary)', fontWeight: 600 }}>8/8 Skills Matched</div>
+            <div className="candidate-name" style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-bright)' }}>Aria Vance</div>
+            <div style={{ fontSize: '0.7rem', color: '#059669', fontWeight: 600 }}>8/8 Skills Matched</div>
           </div>
         </div>
 
-        {/* Depth Candidate Profile Card #2 */}
+        {/* Depth Candidate Profile Card #2: Purple Accent */}
         <div
           className="candidate-depth-card"
           style={{
             bottom: '-30px',
             right: '40px',
             transform: `translateZ(${isHovered ? 50 : 25}px) scale(0.88)`,
+            borderColor: '#DDD6FE',
+            background: 'linear-gradient(135deg, #FFFFFF 0%, #EEE7FF 100%)',
           }}
         >
           <div
@@ -201,8 +205,8 @@ export const Interactive3DLens: React.FC<Interactive3DLensProps> = ({ onExploreD
               width: '30px',
               height: '30px',
               borderRadius: '8px',
-              backgroundColor: 'var(--badge-mod-bg)',
-              color: 'var(--badge-mod-text)',
+              background: 'linear-gradient(135deg, #8B5CF6 0%, #087EA4 100%)',
+              color: '#FFFFFF',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -213,8 +217,8 @@ export const Interactive3DLens: React.FC<Interactive3DLensProps> = ({ onExploreD
             LC
           </div>
           <div>
-            <div style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-bright)' }}>Liam Chen</div>
-            <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>Full-Stack Engineer</div>
+            <div className="candidate-name" style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-bright)' }}>Liam Chen</div>
+            <div className="job-title" style={{ fontSize: '0.68rem', color: '#6D28D9', fontWeight: 500 }}>Operations Director</div>
           </div>
         </div>
       </div>

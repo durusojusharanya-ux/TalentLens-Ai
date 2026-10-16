@@ -137,7 +137,7 @@ export const JobModal: React.FC<JobModalProps> = ({
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" style={{ maxWidth: '780px' }} onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <h2 style={{ fontSize: '1.2rem', fontWeight: 700, color: '#FFFFFF', margin: 0 }}>
+          <h2 style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--text-bright)', margin: 0 }}>
             {jobToEdit ? 'Edit Job Description' : 'Create New Job Description'}
           </h2>
           <button
@@ -151,8 +151,8 @@ export const JobModal: React.FC<JobModalProps> = ({
         <form onSubmit={handleSubmit} className="modal-body" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           {/* Quick Template Picker */}
           {!jobToEdit && templates.length > 0 && (
-            <div style={{ padding: '12px', background: 'rgba(99, 102, 241, 0.06)', borderRadius: '10px', border: '1px solid rgba(99, 102, 241, 0.15)' }}>
-              <div style={{ fontSize: '0.75rem', fontWeight: 600, color: '#818CF8', display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
+            <div style={{ padding: '12px', background: 'var(--bg-card-subtle)', borderRadius: '10px', border: '1px solid var(--border-subtle)' }}>
+              <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--primary)', display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
                 <Sparkles size={14} /> Quick-Fill from Pre-built Roles:
               </div>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
@@ -172,7 +172,7 @@ export const JobModal: React.FC<JobModalProps> = ({
           )}
 
           {error && (
-            <div style={{ padding: '10px 14px', borderRadius: '8px', background: 'var(--danger-bg)', border: '1px solid rgba(239, 68, 68, 0.3)', color: '#F87171', fontSize: '0.85rem' }}>
+            <div style={{ padding: '10px 14px', borderRadius: '8px', background: 'var(--danger-bg)', border: '1px solid rgba(186, 60, 60, 0.25)', color: 'var(--danger)', fontSize: '0.85rem' }}>
               {error}
             </div>
           )}
@@ -254,7 +254,7 @@ export const JobModal: React.FC<JobModalProps> = ({
           {/* Job Description Text */}
           <div>
             <label style={{ fontSize: '0.8rem', color: 'var(--text-muted)', display: 'block', marginBottom: '6px' }}>
-              Full Job Description * (Used for TF-IDF Text Similarity)
+              Full Job Description * (Used for AI Match Analysis & Text Similarity)
             </label>
             <textarea
               value={description}
@@ -277,7 +277,7 @@ export const JobModal: React.FC<JobModalProps> = ({
                 value={reqInput}
                 onChange={(e) => setReqInput(e.target.value)}
                 onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAddReqSkill(); } }}
-                placeholder="Type a skill and press Enter or click Add (e.g. Python, PyTorch)"
+                placeholder="Type a skill and press Enter or click Add (e.g. Strategic Planning, Leadership)"
                 className="input-field"
               />
               <button type="button" onClick={handleAddReqSkill} className="btn btn-secondary btn-sm">
@@ -291,7 +291,7 @@ export const JobModal: React.FC<JobModalProps> = ({
                   <button
                     type="button"
                     onClick={() => setRequiredSkills(requiredSkills.filter((_, i) => i !== idx))}
-                    style={{ background: 'transparent', border: 'none', color: '#F87171', cursor: 'pointer', marginLeft: '4px' }}
+                    style={{ background: 'transparent', border: 'none', color: 'var(--danger)', cursor: 'pointer', marginLeft: '4px' }}
                   >
                     ×
                   </button>
@@ -311,7 +311,7 @@ export const JobModal: React.FC<JobModalProps> = ({
                 value={prefInput}
                 onChange={(e) => setPrefInput(e.target.value)}
                 onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAddPrefSkill(); } }}
-                placeholder="e.g. Docker, FastAPI"
+                placeholder="e.g. Project Delivery, Budget Management"
                 className="input-field"
               />
               <button type="button" onClick={handleAddPrefSkill} className="btn btn-secondary btn-sm">
@@ -325,7 +325,7 @@ export const JobModal: React.FC<JobModalProps> = ({
                   <button
                     type="button"
                     onClick={() => setPreferredSkills(preferredSkills.filter((_, i) => i !== idx))}
-                    style={{ background: 'transparent', border: 'none', color: '#F87171', cursor: 'pointer', marginLeft: '4px' }}
+                    style={{ background: 'transparent', border: 'none', color: 'var(--danger)', cursor: 'pointer', marginLeft: '4px' }}
                   >
                     ×
                   </button>

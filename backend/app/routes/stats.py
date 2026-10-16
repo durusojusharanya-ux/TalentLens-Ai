@@ -53,8 +53,8 @@ def get_dashboard_statistics():
     # 2. Status Breakdown
     under_review = total_candidates - shortlisted_candidates
     status_breakdown = [
-        {"name": "Shortlisted", "value": shortlisted_candidates, "color": "#10B981"},
-        {"name": "Under Review", "value": under_review, "color": "#6366F1"}
+        {"name": "Shortlisted", "value": shortlisted_candidates, "color": "#059669"},
+        {"name": "Under Review", "value": under_review, "color": "#2563EB"}
     ]
 
     # 3. Frequently Matched Skills

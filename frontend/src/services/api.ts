@@ -4,7 +4,11 @@ import {
   Candidate,
   UploadBatchResponse,
   DashboardStats,
-  AppSettingsData
+  AppSettingsData,
+  ScreeningSession,
+  AuditLog,
+  CandidateCompareResult,
+  BackupSnapshot
 } from '../types';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
@@ -50,7 +54,7 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
     }
     // Handle network unreachable / backend offline
     throw new ApiError(
-      'Unable to connect to TalentLens AI backend. Please ensure the FastAPI server is running on http://127.0.0.1:8000.',
+      'Unable to connect to TalentLens AI backend. Please ensure the local backend server is running on http://127.0.0.1:8000.',
       0
     );
   }
@@ -103,9 +107,12 @@ export const api = {
   },
 
   // Upload Resumes
-  uploadResumes: async (jobId: string, files: File[]): Promise<UploadBatchResponse> => {
+  uploadResumes: async (jobId: string, files: File[], sessionId?: string): Promise<UploadBatchResponse> => {
     const formData = new FormData();
     formData.append('job_id', jobId);
+    if (sessionId) {
+      formData.append('session_id', sessionId);
+    }
     files.forEach((file) => {
       formData.append('files', file);
     });
@@ -138,6 +145,8 @@ export const api = {
   getCandidates: async (params?: {
     search?: string;
     job_id?: string;
+    session_id?: string;
+    quick_view?: string;
     shortlisted?: boolean;
     min_score?: number;
     max_score?: number;
@@ -148,6 +157,8 @@ export const api = {
     if (params) {
       if (params.search) query.append('search', params.search);
       if (params.job_id) query.append('job_id', params.job_id);
+      if (params.session_id) query.append('session_id', params.session_id);
+      if (params.quick_view) query.append('quick_view', params.quick_view);
       if (params.shortlisted !== undefined) query.append('shortlisted', String(params.shortlisted));
       if (params.min_score !== undefined) query.append('min_score', String(params.min_score));
       if (params.max_score !== undefined) query.append('max_score', String(params.max_score));
@@ -162,6 +173,22 @@ export const api = {
     return request<Candidate>(`/candidates/${id}`);
   },
 
+  compareCandidates: async (candidateIds: string[]): Promise<CandidateCompareResult> => {
+    return request<CandidateCompareResult>('/candidates/compare', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ candidate_ids: candidateIds }),
+    });
+  },
+
+  bulkShortlist: async (candidateIds: string[], shortlist_status: boolean): Promise<{ status: string; updated_count: number }> => {
+    return request<{ status: string; updated_count: number }>('/candidates/bulk-shortlist', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ candidate_ids: candidateIds, shortlist_status }),
+    });
+  },
+
   toggleShortlist: async (id: string, shortlist_status: boolean): Promise<{ status: string; shortlist_status: boolean }> => {
     return request<{ status: string; shortlist_status: boolean }>(`/candidates/${id}/shortlist`, {
       method: 'PATCH',
@@ -170,9 +197,67 @@ export const api = {
     });
   },
 
+  updateCandidateStage: async (id: string, stage: string): Promise<{ status: string; candidate_id: string; stage: string; shortlist_status: boolean }> => {
+    return request<{ status: string; candidate_id: string; stage: string; shortlist_status: boolean }>(`/candidates/${id}/stage`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ stage }),
+    });
+  },
+
+  updateCandidateInterview: async (id: string, interviewData: any): Promise<{ status: string; candidate_id: string; stage: string; interview_notes: any }> => {
+    return request<{ status: string; candidate_id: string; stage: string; interview_notes: any }>(`/candidates/${id}/interview`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(interviewData),
+    });
+  },
+
   deleteCandidate: async (id: string): Promise<{ status: string; message: string }> => {
     return request<{ status: string; message: string }>(`/candidates/${id}`, {
       method: 'DELETE',
+    });
+  },
+
+  // Screening Sessions
+  getSessions: async (): Promise<ScreeningSession[]> => {
+    return request<ScreeningSession[]>('/sessions');
+  },
+
+  getSession: async (id: string): Promise<ScreeningSession & { candidates: Candidate[] }> => {
+    return request<ScreeningSession & { candidates: Candidate[] }>(`/sessions/${id}`);
+  },
+
+  createSession: async (name: string, job_id: string): Promise<ScreeningSession> => {
+    return request<ScreeningSession>('/sessions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, job_id }),
+    });
+  },
+
+  deleteSession: async (id: string): Promise<{ status: string; message: string }> => {
+    return request<{ status: string; message: string }>(`/sessions/${id}`, {
+      method: 'DELETE',
+    });
+  },
+
+  // Audit Logs
+  getAuditLogs: async (limit = 100, eventType?: string): Promise<AuditLog[]> => {
+    const qs = eventType ? `?limit=${limit}&event_type=${encodeURIComponent(eventType)}` : `?limit=${limit}`;
+    return request<AuditLog[]>(`/audit${qs}`);
+  },
+
+  // Backup & Restore
+  getBackup: async (): Promise<BackupSnapshot> => {
+    return request<BackupSnapshot>('/backup');
+  },
+
+  restoreBackup: async (payload: any): Promise<{ status: string; message: string }> => {
+    return request<{ status: string; message: string }>('/backup/restore', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
     });
   },
 
@@ -192,6 +277,23 @@ export const api = {
     const a = document.createElement('a');
     a.href = downloadUrl;
     a.download = shortlistOnly ? 'talentlens_shortlisted.csv' : 'talentlens_candidates.csv';
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(downloadUrl);
+    document.body.removeChild(a);
+  },
+
+  downloadJobsCsv: async () => {
+    const url = `${API_BASE_URL}/export/jobs/csv`;
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Jobs CSV Export failed with status ${response.status}`);
+    }
+    const blob = await response.blob();
+    const downloadUrl = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = downloadUrl;
+    a.download = 'talentlens_jobs.csv';
     document.body.appendChild(a);
     a.click();
     window.URL.revokeObjectURL(downloadUrl);

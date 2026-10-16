@@ -3,7 +3,19 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from .storage import ensure_directories_and_files, load_candidates, reset_demo_data
 from .demo_generator import generate_demo_dataset
-from .routes import health, jobs, resumes, candidates, stats, export, demo, settings
+from .routes import (
+    health,
+    jobs,
+    resumes,
+    candidates,
+    stats,
+    export,
+    demo,
+    settings,
+    sessions,
+    audit,
+    backup
+)
 
 
 @asynccontextmanager
@@ -19,13 +31,12 @@ async def lifespan(app: FastAPI):
         print("[TalentLens AI] Initialized synthetic demo candidates and sample job.")
 
     yield
-    # Shutdown logic if any
 
 
 app = FastAPI(
     title="TalentLens AI — Resume Screening and Candidate Ranking API",
-    description="Local AI-powered resume screening platform with PyMuPDF text extraction, scikit-learn TF-IDF vectorization, and JSON persistence.",
-    version="1.0.0",
+    description="Local AI-powered resume screening platform with PyMuPDF text extraction, scikit-learn TF-IDF vectorization, screening sessions, and JSON persistence.",
+    version="1.1.0",
     lifespan=lifespan
 )
 
@@ -48,6 +59,9 @@ app.include_router(health.router, prefix="/api")
 app.include_router(jobs.router, prefix="/api")
 app.include_router(resumes.router, prefix="/api")
 app.include_router(candidates.router, prefix="/api")
+app.include_router(sessions.router, prefix="/api")
+app.include_router(audit.router, prefix="/api")
+app.include_router(backup.router, prefix="/api")
 app.include_router(stats.router, prefix="/api")
 app.include_router(export.router, prefix="/api")
 app.include_router(demo.router, prefix="/api")

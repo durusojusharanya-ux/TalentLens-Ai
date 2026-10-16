@@ -6,10 +6,8 @@ import {
   Upload,
   CheckCircle2,
   AlertCircle,
-  Palette,
   LayoutGrid,
-  ExternalLink,
-  ChevronDown
+  ExternalLink
 } from 'lucide-react';
 import { Job } from '../types';
 
@@ -23,8 +21,6 @@ interface HeaderProps {
   onRefresh: () => void;
   isRefreshing: boolean;
   onNavigateUpload: () => void;
-  currentTheme: 'ivory' | 'cobalt' | 'graphite';
-  setTheme: (theme: 'ivory' | 'cobalt' | 'graphite') => void;
   currentLayout: 'command' | 'editorial' | 'spatial';
   setLayout: (layout: 'command' | 'editorial' | 'spatial') => void;
   onOpenLanding: () => void;
@@ -40,8 +36,6 @@ export const Header: React.FC<HeaderProps> = ({
   onRefresh,
   isRefreshing,
   onNavigateUpload,
-  currentTheme,
-  setTheme,
   currentLayout,
   setLayout,
   onOpenLanding,
@@ -53,7 +47,7 @@ export const Header: React.FC<HeaderProps> = ({
     },
     analyze: {
       title: 'Analyze Resumes',
-      subtitle: 'Upload multi-PDF resumes for local TF-IDF text screening',
+      subtitle: 'Upload multi-PDF resumes for intelligent text screening and skill matching',
     },
     candidates: {
       title: 'Candidate Directory',
@@ -73,7 +67,7 @@ export const Header: React.FC<HeaderProps> = ({
     },
     settings: {
       title: 'Platform Settings & Privacy',
-      subtitle: 'Local data persistence details and matching thresholds',
+      subtitle: 'Platform data management details and matching thresholds',
     },
   };
 
@@ -110,32 +104,10 @@ export const Header: React.FC<HeaderProps> = ({
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-        {/* Theme Selector */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-          <Palette size={14} color="var(--primary)" />
-          <select
-            value={currentTheme}
-            onChange={(e) => setTheme(e.target.value as any)}
-            className="input-field"
-            style={{
-              padding: '4px 28px 4px 8px',
-              fontSize: '0.78rem',
-              height: '32px',
-              width: '135px',
-              borderRadius: '8px',
-            }}
-            title="Change Visual Theme"
-          >
-            <option value="ivory">Editorial Ivory</option>
-            <option value="cobalt">Cobalt Studio</option>
-            <option value="graphite">Graphite Dimension</option>
-          </select>
-        </div>
-
         {/* Layout Selector (visible on Overview) */}
         {activeTab === 'overview' && (
           <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-            <LayoutGrid size={14} color="var(--accent-secondary)" />
+            <LayoutGrid size={14} color="var(--primary)" />
             <select
               value={currentLayout}
               onChange={(e) => setLayout(e.target.value as any)}
@@ -198,12 +170,13 @@ export const Header: React.FC<HeaderProps> = ({
             gap: '5px',
             padding: '4px 8px',
             borderRadius: '6px',
-            backgroundColor: isBackendHealthy ? 'var(--badge-strong-bg)' : 'var(--danger-bg)',
-            border: `1px solid ${isBackendHealthy ? 'var(--badge-strong-border)' : 'rgba(220, 38, 38, 0.3)'}`,
+            backgroundColor: isBackendHealthy ? 'var(--success-bg)' : 'var(--danger-bg)',
+            border: `1px solid ${isBackendHealthy ? 'var(--success-border)' : 'var(--danger-border)'}`,
             fontSize: '0.72rem',
-            color: isBackendHealthy ? 'var(--primary)' : 'var(--danger)',
+            fontWeight: 600,
+            color: isBackendHealthy ? 'var(--success)' : 'var(--danger)',
           }}
-          title={isBackendHealthy ? 'FastAPI Local Backend Online' : 'Backend Disconnected'}
+          title={isBackendHealthy ? 'AI Screening Engine Online' : 'Engine Disconnected'}
         >
           {isBackendHealthy ? <CheckCircle2 size={12} /> : <AlertCircle size={12} />}
           <span style={{ display: 'none' }} className="backend-status-text">

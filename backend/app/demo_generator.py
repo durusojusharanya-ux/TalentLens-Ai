@@ -8,33 +8,33 @@ import uuid
 
 SAMPLE_JOB_DATA = {
     "id": "job-sample-aiml-001",
-    "title": "AI/ML Engineer Intern",
-    "department": "AI Research & Development",
+    "title": "Senior Operations & Strategy Lead",
+    "department": "Business Operations",
     "description": (
-        "We are looking for an ambitious AI/ML Engineer Intern to build, fine-tune, and evaluate machine learning models. "
-        "The ideal candidate has hands-on experience with Python, scikit-learn, PyTorch or TensorFlow, Machine Learning fundamentals, "
-        "and data manipulation libraries such as Pandas and NumPy. You will collaborate on natural language processing pipelines, "
-        "integrate models with REST APIs, and apply Git for version control. Exposure to FastAPI and Docker is a strong plus."
+        "We are looking for an ambitious Operations & Strategy Lead to drive cross-functional initiatives, optimize business processes, "
+        "and direct operational planning. The ideal candidate has demonstrated experience in Strategic Planning, Project Management, "
+        "Operations Management, Data Analysis, Leadership, and Process Optimization. You will collaborate on workflow automation, "
+        "manage stakeholder expectations, direct risk assessments, and establish performance metrics."
     ),
     "required_skills": [
-        "Python",
-        "Machine Learning",
-        "scikit-learn",
-        "PyTorch",
-        "Pandas",
-        "NumPy",
-        "Git",
-        "REST APIs"
+        "Strategic Planning",
+        "Project Management",
+        "Operations Management",
+        "Data Analysis",
+        "Leadership",
+        "Process Optimization",
+        "Risk Assessment",
+        "Stakeholder Management"
     ],
     "preferred_skills": [
-        "FastAPI",
-        "Docker",
-        "Deep Learning",
-        "Natural Language Processing"
+        "Budget Management",
+        "Change Management",
+        "Market Research",
+        "Performance Metrics"
     ],
-    "min_experience_years": 0.5,
+    "min_experience_years": 3.0,
     "location": "Bengaluru / Hybrid",
-    "employment_type": "Internship"
+    "employment_type": "Full-time"
 }
 
 
@@ -47,24 +47,24 @@ DEMO_RESUMES = [
 aria.vance@example.edu | +1 (555) 234-5678 | San Francisco, CA
 
 SUMMARY
-Passionate Artificial Intelligence student with 1+ years of experience training and evaluating machine learning models. 
-Proven expertise in Python, PyTorch, scikit-learn, Pandas, and NumPy for NLP and predictive modeling.
+Experienced Operations and Strategy Lead with 4+ years of experience directing organizational initiatives and operational excellence.
+Proven expertise in Strategic Planning, Project Management, Operations Management, Data Analysis, Leadership, and Process Optimization.
 
 EDUCATION
-B.S. in Computer Science (AI Track), Expected May 2026
+M.B.A. in Operations & Strategy, Expected May 2026
+B.S. in Business Administration, 2022
 
-TECHNICAL SKILLS
-Languages: Python, C++, SQL
-ML Frameworks: PyTorch, scikit-learn, TensorFlow, Hugging Face
-Libraries: Pandas, NumPy, Matplotlib, SciPy
-Tools & Concepts: Git, Docker, REST APIs, Deep Learning, Natural Language Processing, Machine Learning
+CORE COMPETENCIES
+Strategic Management: Strategic Planning, Project Management, Operations Management, Change Management
+Analysis & Metrics: Data Analysis, Risk Assessment, Performance Metrics, Market Research
+Leadership & Alignment: Leadership, Stakeholder Management, Budget Management, Cross-Functional Collaboration
 
 PROJECTS & EXPERIENCE
-AI Research Assistant (2025 - Present)
-- Trained transformer-based NLP classification models with PyTorch and Hugging Face, achieving 91% F1-score.
-- Conducted exploratory data analysis and feature engineering on tabular datasets using Pandas, NumPy, and scikit-learn.
-- Built automated evaluation pipelines and integrated model inference endpoints using REST APIs and Git for versioning.
-- Experimented with deep learning architectures and hyperparameter tuning.""",
+Senior Operations Lead (2024 - Present)
+- Spearheaded enterprise-wide Strategic Planning and Project Management across multi-functional business units.
+- Conducted quantitative Data Analysis to identify workflow bottlenecks, driving a 32% efficiency improvement.
+- Directed Risk Assessment audits and established transparent KPI Performance Metrics for leadership.
+- Managed Stakeholder Management communications and oversaw continuous Process Optimization initiatives.""",
     },
     {
         "name": "Liam Chen",
@@ -74,24 +74,21 @@ AI Research Assistant (2025 - Present)
 liam.chen@devmail.org | +1 (555) 876-5432 | Seattle, WA
 
 PROFESSIONAL SUMMARY
-Full-Stack Software Engineer with 2+ years of experience developing responsive web applications and backend microservices.
-Proficient in TypeScript, React, Python, FastAPI, Node.js, and Docker containerization.
+Operations Director with 3+ years of experience managing business operations, project delivery, and team leadership.
+Demonstrated competence in Strategic Planning, Project Management, Operations Management, and Leadership.
 
 EDUCATION
-B.S. in Software Engineering, Graduated 2025
+B.S. in Management & Business Operations, 2024
 
-TECHNICAL EXPERTISE
-Frontend: React, TypeScript, JavaScript, HTML5, CSS3, Tailwind CSS
-Backend: Python, FastAPI, Node.js, Express, REST APIs
-Database & DevOps: PostgreSQL, SQL, Docker, Git, CI/CD, Linux
-ML Familiarity: Basic Python data analysis with Pandas, introductory Machine Learning concepts
+PROFESSIONAL EXPERTISE
+Operations: Strategic Planning, Project Management, Operations Management, Leadership
+Governance: Stakeholder Management, Budget Management, Change Management, Team Coordination
 
 EXPERIENCE
-Junior Full-Stack Developer | CloudTech Solutions (2024 - 2026)
-- Designed and maintained REST APIs using Python FastAPI and PostgreSQL.
-- Implemented responsive frontend dashboards using React and TypeScript.
-- Containerized microservices using Docker and automated deployments via Git CI/CD pipelines.
-- Integrated third-party analytics APIs and optimized database queries.""",
+Operations Project Lead | CloudTech Enterprise (2024 - 2026)
+- Directed cross-functional teams in executing strategic Project Management and Operations Management initiatives.
+- Championed team Leadership and conducted regular Stakeholder Management reviews with executive sponsors.
+- Oversaw Budget Management allocations and implemented departmental Change Management procedures.""",
     },
     {
         "name": "Sophia Patel",
@@ -101,24 +98,22 @@ Junior Full-Stack Developer | CloudTech Solutions (2024 - 2026)
 sophia.patel@datahub.net | +1 (555) 345-6789 | Chicago, IL
 
 OBJECTIVE
-Analytical and detail-oriented Data Analyst with 1.5+ years of experience transforming raw enterprise datasets into actionable insights.
-Strong command of SQL, Python, Pandas, NumPy, and Tableau dashboards.
+Analytical and detail-oriented Operations Analyst with 2+ years of experience transforming business processes through data-driven insights.
+Strong command of Data Analysis, Process Optimization, Risk Assessment, and Performance Metrics.
 
 EDUCATION
-B.S. in Statistics & Data Analytics, 2025
+B.S. in Economics & Business Analytics, 2025
 
 CORE COMPETENCIES
-Analysis & BI: Data Analysis, Exploratory Data Analysis, Tableau, Power BI, Excel
-Programming: Python, SQL, R
-Data Processing: Pandas, NumPy, Data Cleaning, Data Visualization
-Collaboration: Git, Agile, Business Communication
+Business Analysis: Data Analysis, Process Optimization, Risk Assessment, Market Research
+Operational Governance: Performance Metrics, Stakeholder Management, Reporting, Strategic Planning
 
 EXPERIENCE
-Data Analyst Intern | Horizon Analytics (2024 - 2025)
-- Wrote complex SQL queries across relational databases to extract business KPI metrics.
-- Utilized Python, Pandas, and NumPy for automated data cleansing and statistical analysis.
-- Created interactive BI dashboards in Tableau for executive stakeholders.
-- Collaborated using Git version control and presented weekly insights to management.""",
+Business Operations Analyst | Horizon Analytics (2024 - 2025)
+- Performed rigorous Data Analysis and financial modeling to support Strategic Planning.
+- Identified operational bottlenecks and implemented automated Process Optimization workflows.
+- Synthesized weekly Risk Assessment reports and tracked Performance Metrics dashboards for leadership.
+- Conducted targeted Market Research to evaluate competitor capabilities and customer satisfaction.""",
     }
 ]
 
@@ -157,6 +152,8 @@ def generate_demo_dataset() -> Tuple[Dict[str, Any], List[Dict[str, Any]]]:
             "required_skills_matched": results["required_skills_matched"],
             "required_skills_missing": results["required_skills_missing"],
             "preferred_skills_matched": results["preferred_skills_matched"],
+            "evidence_snippets": results.get("evidence_snippets", {}),
+            "session_id": "session-demo-001",
             "required_skill_coverage": results["required_skill_coverage"],
             "explanation": results["explanation"],
             "warnings": results["warnings"],
