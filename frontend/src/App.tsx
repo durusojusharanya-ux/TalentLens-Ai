@@ -15,7 +15,13 @@ import { SettingsPage } from './pages/SettingsPage';
 import { LandingPage } from './pages/LandingPage';
 import { Job, Candidate, DashboardStats, ScreeningSession, CandidateCompareResult, CandidateStage, InterviewNotes } from './types';
 import { api } from './services/api';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, Sparkles } from 'lucide-react';
+import {
+  SHOWCASE_JOBS,
+  SHOWCASE_CANDIDATES,
+  SHOWCASE_STATS,
+  SHOWCASE_SESSIONS
+} from './data/showcaseData';
 
 export const App: React.FC = () => {
   // View mode: 'landing' (public marketing showcase) or 'app' (recruiter workspace)
@@ -94,12 +100,25 @@ export const App: React.FC = () => {
     setGlobalError(null);
     try {
       // 1. Health check
+      let healthy = false;
       try {
         await api.checkHealth();
+        healthy = true;
         setIsBackendHealthy(true);
       } catch {
+        healthy = false;
         setIsBackendHealthy(false);
-        setGlobalError('Backend server is offline. Please ensure local backend is running on http://127.0.0.1:8000.');
+      }
+
+      if (!healthy) {
+        // Fallback to rich showcase data for portfolio/Vercel demonstration
+        setJobs(SHOWCASE_JOBS);
+        if (!selectedJobId) {
+          setSelectedJobId(SHOWCASE_JOBS[0].id);
+        }
+        setCandidates(SHOWCASE_CANDIDATES);
+        setSessions(SHOWCASE_SESSIONS);
+        setStats(SHOWCASE_STATS);
         setIsRefreshing(false);
         return;
       }
@@ -141,7 +160,9 @@ export const App: React.FC = () => {
   const handleToggleShortlist = async (id: string, currentStatus: boolean) => {
     try {
       const nextStatus = !currentStatus;
-      await api.toggleShortlist(id, nextStatus);
+      if (isBackendHealthy) {
+        await api.toggleShortlist(id, nextStatus);
+      }
 
       if (nextStatus) {
         // Trigger subtle confetti burst
@@ -149,7 +170,7 @@ export const App: React.FC = () => {
           particleCount: 45,
           spread: 65,
           origin: { y: 0.8 },
-          colors: ['#2563EB', '#7C3AED', '#059669', '#F59E0B', '#DB2777', '#06B6D4'],
+          colors: ['#087EA4', '#8B5CF6', '#059669', '#38BDF8'],
         });
       }
 
@@ -159,17 +180,30 @@ export const App: React.FC = () => {
 
       // Update in comparison modal if open
       if (compareModalData) {
-        setCompareModalData(prev => {
+        setCompareModalData((prev) => {
           if (!prev) return null;
           return {
             ...prev,
-            candidates: prev.candidates.map(c => c.id === id ? { ...c, shortlist_status: nextStatus } : c)
+            candidates: prev.candidates.map((c) =>
+              c.id === id ? { ...c, shortlist_status: nextStatus } : c
+            ),
           };
         });
       }
 
-      const updatedStats = await api.getStats();
-      setStats(updatedStats);
+      if (isBackendHealthy) {
+        const updatedStats = await api.getStats();
+        setStats(updatedStats);
+      } else {
+        setStats((prev) => {
+          if (!prev) return null;
+          const countChange = nextStatus ? 1 : -1;
+          return {
+            ...prev,
+            shortlisted_candidates: Math.max(0, prev.shortlisted_candidates + countChange),
+          };
+        });
+      }
     } catch (err: any) {
       alert(`Failed to update shortlist status: ${err.message}`);
     }
@@ -178,14 +212,16 @@ export const App: React.FC = () => {
   // Bulk Shortlist
   const handleBulkShortlist = async (candidateIds: string[], status: boolean) => {
     try {
-      await api.bulkShortlist(candidateIds, status);
+      if (isBackendHealthy) {
+        await api.bulkShortlist(candidateIds, status);
+      }
 
       if (status) {
         confetti({
           particleCount: 50,
           spread: 70,
           origin: { y: 0.8 },
-          colors: ['#087EA4', '#075985', '#38BDF8', '#0284C7'],
+          colors: ['#087EA4', '#8B5CF6', '#059669', '#38BDF8'],
         });
       }
 
@@ -193,8 +229,10 @@ export const App: React.FC = () => {
         prev.map((c) => (candidateIds.includes(c.id) ? { ...c, shortlist_status: status } : c))
       );
 
-      const updatedStats = await api.getStats();
-      setStats(updatedStats);
+      if (isBackendHealthy) {
+        const updatedStats = await api.getStats();
+        setStats(updatedStats);
+      }
     } catch (err: any) {
       alert(`Bulk action failed: ${err.message}`);
     }
@@ -203,14 +241,29 @@ export const App: React.FC = () => {
   // Stage Management
   const handleUpdateStage = async (id: string, stage: CandidateStage) => {
     try {
-      const res = await api.updateCandidateStage(id, stage);
-      setCandidates((prev) =>
-        prev.map((c) =>
-          c.id === id
-            ? { ...c, stage: res.stage as CandidateStage, shortlist_status: res.shortlist_status }
-            : c
-        )
-      );
+      const nextShortlist = stage === 'Shortlisted' ? true : stage === 'Rejected' ? false : undefined;
+      if (isBackendHealthy) {
+        const res = await api.updateCandidateStage(id, stage);
+        setCandidates((prev) =>
+          prev.map((c) =>
+            c.id === id
+              ? { ...c, stage: res.stage as CandidateStage, shortlist_status: res.shortlist_status }
+              : c
+          )
+        );
+      } else {
+        setCandidates((prev) =>
+          prev.map((c) =>
+            c.id === id
+              ? {
+                  ...c,
+                  stage,
+                  shortlist_status: nextShortlist !== undefined ? nextShortlist : c.shortlist_status,
+                }
+              : c
+          )
+        );
+      }
 
       if (compareModalData) {
         setCompareModalData((prev) => {
@@ -219,15 +272,21 @@ export const App: React.FC = () => {
             ...prev,
             candidates: prev.candidates.map((c) =>
               c.id === id
-                ? { ...c, stage: res.stage as CandidateStage, shortlist_status: res.shortlist_status }
+                ? {
+                    ...c,
+                    stage,
+                    shortlist_status: nextShortlist !== undefined ? nextShortlist : c.shortlist_status,
+                  }
                 : c
             ),
           };
         });
       }
 
-      const updatedStats = await api.getStats();
-      setStats(updatedStats);
+      if (isBackendHealthy) {
+        const updatedStats = await api.getStats();
+        setStats(updatedStats);
+      }
     } catch (err: any) {
       alert(`Failed to update candidate stage: ${err.message}`);
     }
@@ -236,7 +295,9 @@ export const App: React.FC = () => {
   // Bulk Stage Update
   const handleBulkUpdateStage = async (ids: string[], stage: CandidateStage) => {
     try {
-      await Promise.all(ids.map((id) => api.updateCandidateStage(id, stage)));
+      if (isBackendHealthy) {
+        await Promise.all(ids.map((id) => api.updateCandidateStage(id, stage)));
+      }
       setCandidates((prev) =>
         prev.map((c) =>
           ids.includes(c.id)
@@ -249,8 +310,10 @@ export const App: React.FC = () => {
             : c
         )
       );
-      const updatedStats = await api.getStats();
-      setStats(updatedStats);
+      if (isBackendHealthy) {
+        const updatedStats = await api.getStats();
+        setStats(updatedStats);
+      }
     } catch (err: any) {
       alert(`Failed to bulk update candidate stages: ${err.message}`);
     }
@@ -259,18 +322,31 @@ export const App: React.FC = () => {
   // Interview Notes Update
   const handleUpdateInterview = async (id: string, interviewData: Partial<InterviewNotes>) => {
     try {
-      const res = await api.updateCandidateInterview(id, interviewData);
-      setCandidates((prev) =>
-        prev.map((c) =>
-          c.id === id
-            ? {
-                ...c,
-                stage: (res.stage as CandidateStage) || c.stage,
-                interview_notes: res.interview_notes,
-              }
-            : c
-        )
-      );
+      if (isBackendHealthy) {
+        const res = await api.updateCandidateInterview(id, interviewData);
+        setCandidates((prev) =>
+          prev.map((c) =>
+            c.id === id
+              ? {
+                  ...c,
+                  stage: (res.stage as CandidateStage) || c.stage,
+                  interview_notes: res.interview_notes,
+                }
+              : c
+          )
+        );
+      } else {
+        setCandidates((prev) =>
+          prev.map((c) =>
+            c.id === id
+              ? {
+                  ...c,
+                  interview_notes: { ...(c.interview_notes || {}), ...interviewData },
+                }
+              : c
+          )
+        );
+      }
     } catch (err: any) {
       alert(`Failed to save interview notes: ${err.message}`);
       throw err;
@@ -280,6 +356,64 @@ export const App: React.FC = () => {
   // Candidate Comparison
   const handleCompareCandidates = async (candidateIds: string[]) => {
     try {
+      if (!isBackendHealthy) {
+        const selectedCands = candidates.filter((c) => candidateIds.includes(c.id));
+        const allReqSkills = Array.from(
+          new Set(
+            selectedCands.flatMap((c) => [
+              ...c.required_skills_matched,
+              ...c.required_skills_missing,
+            ])
+          )
+        );
+        const allPrefSkills = Array.from(
+          new Set(selectedCands.flatMap((c) => c.preferred_skills_matched))
+        );
+
+        const skillMatrix = [
+          ...allReqSkills.map((s) => ({
+            skill: s,
+            is_required: true,
+            candidates: Object.fromEntries(
+              selectedCands.map((c) => [
+                c.id,
+                {
+                  matched: c.required_skills_matched.includes(s),
+                  evidence:
+                    c.evidence_snippets?.[s] ||
+                    (c.required_skills_matched.includes(s)
+                      ? 'Verified in candidate experience.'
+                      : 'Not detected in extracted text.'),
+                },
+              ])
+            ),
+          })),
+          ...allPrefSkills.map((s) => ({
+            skill: s,
+            is_required: false,
+            candidates: Object.fromEntries(
+              selectedCands.map((c) => [
+                c.id,
+                {
+                  matched: c.preferred_skills_matched.includes(s),
+                  evidence:
+                    c.evidence_snippets?.[s] ||
+                    (c.preferred_skills_matched.includes(s)
+                      ? 'Verified in candidate experience.'
+                      : 'Not detected in extracted text.'),
+                },
+              ])
+            ),
+          })),
+        ];
+
+        setCompareModalData({
+          candidate_count: selectedCands.length,
+          candidates: selectedCands,
+          skill_matrix: skillMatrix,
+        });
+        return;
+      }
       const res = await api.compareCandidates(candidateIds);
       setCompareModalData(res);
     } catch (err: any) {
@@ -374,6 +508,31 @@ export const App: React.FC = () => {
           setLayout={setLayout}
           onOpenLanding={() => setViewMode('landing')}
         />
+
+        {/* Interactive Portfolio Showcase Banner */}
+        {!isBackendHealthy && !globalError && (
+          <div
+            style={{
+              padding: '10px 24px',
+              background: 'linear-gradient(90deg, #DDF2FF 0%, #EEE7FF 100%)',
+              borderBottom: '1px solid #DCE8EF',
+              color: '#075985',
+              fontSize: '0.84rem',
+              fontWeight: 500,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px',
+              textAlign: 'center',
+              flexWrap: 'wrap'
+            }}
+          >
+            <Sparkles size={16} color="#8B5CF6" />
+            <span>
+              <strong>Portfolio Showcase Mode</strong> — Exploring pre-analyzed candidates, match evidence, and pipeline telemetry. Connect a local or cloud backend for live PDF parsing.
+            </span>
+          </div>
+        )}
 
         {/* Global Error Banner */}
         {globalError && (
